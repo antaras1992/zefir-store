@@ -121,6 +121,29 @@ export default function Home() {
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
+  const [checkingOut, setCheckingOut] = useState(false);
+  const handleCheckout = async () => {
+    if (cart.length === 0) return;
+    setCheckingOut(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: cart }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url; // redirect to Stripe
+      } else {
+        showToast(data.error || "Something went wrong");
+        setCheckingOut(false);
+      }
+    } catch (e) {
+      showToast("Payment error. Please try again.");
+      setCheckingOut(false);
+    }
+  };
+
   const shopList = shopCat === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.cat === shopCat);
   const featured = PRODUCTS.filter((p) => p.featured).slice(0, 4);
   const shopTitles = { all: "All Products", bouquets: "Bouquets", boxes: "Gift Boxes", extras: "Extras" };
@@ -369,7 +392,7 @@ export default function Home() {
             <div className={styles.cartSubtotal}><span>Subtotal</span><span>${subtotal}</span></div>
             <div className={styles.cartNote}>Shipping &amp; taxes calculated at checkout · 3 days handcrafting time</div>
             <div className={styles.cartTotal}><span>Total</span><span>${subtotal}</span></div>
-            <button className={styles.cartCheckout} onClick={() => showToast("Checkout — coming in Stage 2 (Stripe payment)")}>Proceed to Checkout</button>
+            <button className={styles.cartCheckout} onClick={handleCheckout} disabled={checkingOut}>{checkingOut ? "Redirecting to payment…" : "Proceed to Checkout"}</button>
           </div>
         )}
       </div>
