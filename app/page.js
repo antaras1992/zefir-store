@@ -244,7 +244,7 @@ export default function Home() {
             </div>
             <div className={styles.heroVisual}>
               <div className={styles.heroBadge}>Handmade to order</div>
-              <Flower type="tulip" size={170} />
+              <img src="/hero.jpg" alt="Zefir Canada marshmallow bouquet gift boxes" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px" }} />
               <div className={styles.heroTag}>Looks real. Tastes magical.</div>
             </div>
           </section>
