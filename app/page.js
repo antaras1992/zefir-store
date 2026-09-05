@@ -298,6 +298,34 @@ export default function Home() {
             </div>
           </section>
 
+          <section className={styles.secCream}>
+            <div className={styles.secEyebrow}>Real customers</div>
+            <h2 className={`${styles.secTitle} ${styles.serif}`}>Loved across Canada</h2>
+            <p className={styles.secSub}>★★★★★ What people say about their bouquets</p>
+            <div className={styles.reviews}>
+              <div className={styles.review}>
+                <div className={styles.reviewStars}>★★★★★</div>
+                <p className={styles.reviewText}>&ldquo;These edible tulips are as stunning as they are delicious! Each delicate bloom is crafted from soft, pillowy marshmallow infused with real fruit purée — the flavor is fresh, not overly sweet, and absolutely delightful. A perfect balance of beauty and taste — almost too pretty to eat... almost!&rdquo;</p>
+                <div className={styles.reviewName}>— Danika</div>
+              </div>
+              <div className={styles.review}>
+                <div className={styles.reviewStars}>★★★★★</div>
+                <p className={styles.reviewText}>&ldquo;These are so gorgeous 😍💖 Great job! 👏&rdquo;</p>
+                <div className={styles.reviewName}>— Jaya</div>
+              </div>
+              <div className={styles.review}>
+                <div className={styles.reviewStars}>★★★★★</div>
+                <p className={styles.reviewText}>&ldquo;Highly recommended ❤️❤️❤️❤️&rdquo;</p>
+                <div className={styles.reviewName}>— Jessy</div>
+              </div>
+              <div className={styles.review}>
+                <div className={styles.reviewStars}>★★★★★</div>
+                <p className={styles.reviewText}>&ldquo;So good — I am very happy! 😊 Will order again.&rdquo;</p>
+                <div className={styles.reviewName}>— Yevhenii</div>
+              </div>
+            </div>
+          </section>
+
           <section className={styles.secDark} style={{ textAlign: "center" }}>
             <h2 className={`${styles.secTitle} ${styles.serif}`}>Make their day unforgettable</h2>
             <p style={{ color: "#888780", fontSize: "14px", marginBottom: "28px" }}>Handcrafted fresh · Gift-ready · Local delivery or Canada-wide shipping</p>

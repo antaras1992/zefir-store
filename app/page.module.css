@@ -27,7 +27,7 @@
 .heroEyebrow { font-size: 11px; letter-spacing: 2.5px; color: var(--rose); text-transform: uppercase; margin-bottom: 18px; }
 .hero h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(30px,5vw,46px); font-weight: 400; line-height: 1.15; margin-bottom: 18px; }
 .hero p { font-size: clamp(14px,2vw,15px); color: var(--gray2); line-height: 1.75; max-width: 440px; margin-bottom: 28px; }
-.heroBtns { display: flex; gap: 14px; flex-wrap: wrap; width: 100%; }
+.heroBtns { display: flex; gap: 14px; flex-wrap: wrap; }
 .btn { font-size: 14px; font-weight: 500; letter-spacing: 0.3px; border-radius: 4px; padding: 14px 32px; transition: all .2s; display: inline-block; text-align: center; border: none; cursor: pointer; }
 .btnPrimary { background: var(--rose); color: #fff; }
 .btnPrimary:hover { background: var(--rose-mid); }
@@ -138,6 +138,13 @@
 .benefit h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
 .benefit p { font-size: 13px; color: var(--gray); line-height: 1.6; }
 
+/* REVIEWS */
+.reviews { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; max-width: 900px; margin: 0 auto; }
+.review { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+.reviewStars { color: var(--rose); font-size: 14px; letter-spacing: 2px; margin-bottom: 12px; }
+.reviewText { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 14px; font-style: italic; }
+.reviewName { font-size: 13px; font-weight: 500; color: var(--gray2); }
+
 /* FOOTER */
 .footer { background: var(--cream); padding: 48px 40px 24px; }
 .footerTop { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 40px; max-width: 1000px; margin: 0 auto 32px; }
@@ -158,6 +165,7 @@
 @media (max-width: 900px) {
   .productGrid { grid-template-columns: repeat(2,1fr); }
   .benefits { grid-template-columns: repeat(2,1fr); }
+  .reviews { grid-template-columns: 1fr; }
   .catTiles { grid-template-columns: repeat(3,1fr); gap: 14px; }
   .footerTop { grid-template-columns: 1fr 1fr; gap: 28px; }
 }
@@ -168,7 +176,7 @@
   .mobileMenu { display: flex; }
   .hero { grid-template-columns: 1fr; }
   .heroVisual { order: -1; height: clamp(220px,45vw,300px); }
-.heroBtns .btn { flex: 1; min-width: 140px; text-align: center; box-sizing: border-box; }
+  .heroBtns .btn { flex: 1; min-width: 140px; }
   .trustBar { gap: 16px; justify-content: flex-start; overflow-x: auto; }
   .trustItem { white-space: nowrap; flex-shrink: 0; }
   .catTiles { grid-template-columns: 1fr; max-width: 420px; }
@@ -182,6 +190,6 @@
   .productGrid { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; }
   .benefits { grid-template-columns: 1fr; gap: 24px; }
   .heroBtns { flex-direction: column; }
-.heroBtns .btn { width: 100%; text-align: center; box-sizing: border-box; }
+  .heroBtns .btn { width: 100%; }
   .optBtn { flex: 1; min-width: 90px; }
 }
