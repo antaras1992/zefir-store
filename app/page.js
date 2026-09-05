@@ -79,6 +79,12 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [toast, setToast] = useState("");
 
+  // Shipping state
+  const [postal, setPostal] = useState("");
+  const [shipOptions, setShipOptions] = useState([]);
+  const [selShip, setSelShip] = useState(null);
+  const [calcLoading, setCalcLoading] = useState(false);
+
   const showToast = (msg) => {
     setToast(msg);
     setTimeout(() => setToast(""), 2200);
@@ -120,16 +126,50 @@ export default function Home() {
 
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const shipCost = selShip ? selShip.price : 0;
+  const grandTotal = subtotal + shipCost;
+
+  // Calculate shipping options for entered postal code
+  const calcShipping = async () => {
+    if (!postal || postal.trim().length < 3) {
+      showToast("Enter a valid postal code");
+      return;
+    }
+    setCalcLoading(true);
+    setShipOptions([]);
+    setSelShip(null);
+    try {
+      const res = await fetch("/api/shipping", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: cart, postalCode: postal }),
+      });
+      const data = await res.json();
+      if (data.options && data.options.length > 0) {
+        setShipOptions(data.options);
+        setSelShip(data.options[0]); // pre-select first
+      } else {
+        showToast(data.error || "No shipping options found");
+      }
+    } catch (e) {
+      showToast("Couldn't calculate shipping");
+    }
+    setCalcLoading(false);
+  };
 
   const [checkingOut, setCheckingOut] = useState(false);
   const handleCheckout = async () => {
     if (cart.length === 0) return;
+    if (!selShip) {
+      showToast("Please calculate & select shipping first");
+      return;
+    }
     setCheckingOut(true);
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart }),
+        body: JSON.stringify({ items: cart, shipping: selShip }),
       });
       const data = await res.json();
       if (data.url) {
@@ -390,8 +430,46 @@ export default function Home() {
         {cart.length > 0 && (
           <div className={styles.cartFoot}>
             <div className={styles.cartSubtotal}><span>Subtotal</span><span>${subtotal}</span></div>
-            <div className={styles.cartNote}>Shipping &amp; taxes calculated at checkout · 3 days handcrafting time</div>
-            <div className={styles.cartTotal}><span>Total</span><span>${subtotal}</span></div>
+
+            {/* Shipping calculator */}
+            <div style={{ margin: "14px 0", paddingTop: "12px", borderTop: "1px solid #E8E5DF" }}>
+              <div style={{ fontSize: "12px", fontWeight: 600, marginBottom: "8px", color: "#1C1A18" }}>Shipping</div>
+              <div style={{ display: "flex", gap: "8px", marginBottom: "10px" }}>
+                <input
+                  type="text"
+                  placeholder="Postal code (e.g. T5J 0N3)"
+                  value={postal}
+                  onChange={(e) => setPostal(e.target.value)}
+                  style={{ flex: 1, border: "1px solid #E8E5DF", borderRadius: "6px", padding: "10px 12px", fontSize: "13px", fontFamily: "'Inter',sans-serif", outline: "none" }}
+                />
+                <button
+                  onClick={calcShipping}
+                  disabled={calcLoading}
+                  style={{ background: "#1C1A18", color: "#fff", border: "none", borderRadius: "6px", padding: "0 16px", fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap" }}
+                >
+                  {calcLoading ? "..." : "Calculate"}
+                </button>
+              </div>
+
+              {shipOptions.map((opt) => (
+                <label
+                  key={opt.id}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 12px", border: `1px solid ${selShip?.id === opt.id ? "#D4537E" : "#E8E5DF"}`, borderRadius: "8px", marginBottom: "6px", cursor: "pointer", background: selShip?.id === opt.id ? "#FFF5F8" : "#fff" }}
+                >
+                  <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <input type="radio" checked={selShip?.id === opt.id} onChange={() => setSelShip(opt)} style={{ accentColor: "#D4537E" }} />
+                    <span>
+                      <span style={{ fontSize: "13px", fontWeight: 500, display: "block" }}>{opt.name}</span>
+                      <span style={{ fontSize: "11px", color: "#888780" }}>{opt.eta}</span>
+                    </span>
+                  </span>
+                  <span style={{ fontSize: "13px", fontWeight: 600 }}>{opt.price === 0 ? "Free" : `$${opt.price}`}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className={styles.cartNote}>Taxes calculated at checkout · 3 days handcrafting time</div>
+            <div className={styles.cartTotal}><span>Total</span><span>${grandTotal.toFixed(2)}</span></div>
             <button className={styles.cartCheckout} onClick={handleCheckout} disabled={checkingOut}>{checkingOut ? "Redirecting to payment…" : "Proceed to Checkout"}</button>
           </div>
         )}

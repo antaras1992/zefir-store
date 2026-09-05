@@ -1,10 +1,22 @@
+"use client";
+
+import { useEffect } from "react";
 import Link from "next/link";
 
-export const metadata = {
-  title: "Order Confirmed — Zefir Canada",
-};
-
 export default function SuccessPage() {
+  useEffect(() => {
+    // Get session_id from URL and notify Telegram
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+    if (sessionId) {
+      fetch("/api/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId }),
+      }).catch(() => {});
+    }
+  }, []);
+
   return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#F2EDE8", fontFamily: "'Inter', -apple-system, sans-serif", padding: "20px" }}>
       <div style={{ background: "#fff", borderRadius: "16px", padding: "48px 40px", maxWidth: "480px", textAlign: "center", boxShadow: "0 8px 40px rgba(212,83,126,0.12)" }}>
@@ -18,7 +30,7 @@ export default function SuccessPage() {
           Your bouquet is being handcrafted fresh in our Edmonton kitchen. 🌸
         </p>
         <p style={{ fontSize: "14px", color: "#888780", lineHeight: 1.7, marginBottom: "32px" }}>
-          You&apos;ll receive a confirmation email shortly. Please allow 3 days for handcrafting before delivery.
+          You&apos;ll receive a confirmation shortly. Please allow 3 days for handcrafting before delivery.
         </p>
         <Link href="/" style={{ display: "inline-block", background: "#D4537E", color: "#fff", fontSize: "14px", fontWeight: 500, padding: "14px 32px", borderRadius: "6px", textDecoration: "none" }}>
           Back to Shop
