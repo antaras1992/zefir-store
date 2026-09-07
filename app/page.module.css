@@ -176,7 +176,7 @@
   .mobileMenu { display: flex; }
   .hero { grid-template-columns: 1fr; }
 .heroVisual { order: -1; height: clamp(280px,60vw,380px); }
-  .heroBtns .btn { flex: 1; min-width: 140px; }
+  .heroBtns .btn { flex: 1; min-width: 140px; text-align: center; box-sizing: border-box; }
   .trustBar { gap: 16px; justify-content: flex-start; overflow-x: auto; }
   .trustItem { white-space: nowrap; flex-shrink: 0; }
   .catTiles { grid-template-columns: 1fr; max-width: 420px; }
@@ -190,6 +190,6 @@
   .productGrid { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; }
   .benefits { grid-template-columns: 1fr; gap: 24px; }
   .heroBtns { flex-direction: column; }
-  .heroBtns .btn { width: 100%; }
+  .heroBtns .btn { width: 100%; text-align: center; box-sizing: border-box; }
   .optBtn { flex: 1; min-width: 90px; }
 }
