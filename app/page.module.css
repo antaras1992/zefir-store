@@ -33,7 +33,7 @@
 .btnPrimary:hover { background: var(--rose-mid); }
 .btnOutline { background: transparent; color: var(--text); border: 1px solid var(--border); }
 .btnOutline:hover { border-color: var(--rose); color: var(--rose); }
-.heroVisual { background: #E8DDD6; border-radius: 12px; height: 360px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.heroVisual { background: #E8DDD6; border-radius: 12px; height: 460px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 .heroTag { position: absolute; bottom: 18px; left: 18px; background: var(--rose); color: #fff; border-radius: 4px; padding: 6px 14px; font-size: 11px; letter-spacing: 0.5px; }
 .heroBadge { position: absolute; top: 18px; right: 18px; background: #fff; border-radius: 20px; padding: 6px 14px; font-size: 11px; font-style: italic; }
 
@@ -175,7 +175,7 @@
   .navToggle { display: block; }
   .mobileMenu { display: flex; }
   .hero { grid-template-columns: 1fr; }
-  .heroVisual { order: -1; height: clamp(220px,45vw,300px); }
+.heroVisual { order: -1; height: clamp(280px,60vw,380px); }
   .heroBtns .btn { flex: 1; min-width: 140px; }
   .trustBar { gap: 16px; justify-content: flex-start; overflow-x: auto; }
   .trustItem { white-space: nowrap; flex-shrink: 0; }

@@ -1,6 +1,7 @@
-export const metadata = {
+export const metadata =  {
   title: "Zefir Canada — Handmade Marshmallow Bouquets | Edmonton & Leduc",
   description: "Premium handmade marshmallow bouquets and gift boxes. Made fresh in Edmonton, AB. Local delivery, pickup and Canada-wide shipping.",
+    icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({ children }) {
