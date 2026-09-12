@@ -194,6 +194,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
 
   const [checkingOut, setCheckingOut] = useState(false);
   const [deliveryDate, setDeliveryDate] = useState("");
+  const [calView, setCalView] = useState({y: new Date().getFullYear(), m: new Date().getMonth()});
   const handleCheckout = async () => {
     if (cart.length === 0) return;
     if (!selShip) {
@@ -622,19 +623,65 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
 
             <div style={{marginBottom:"12px"}}>
               {selShip && (() => {
-                // Parse ETA days from shipping option (e.g. "2–5 business days" → 5)
                 const etaText = selShip.eta || "";
                 const nums = etaText.match(/\d+/g);
                 const etaDays = nums ? Math.max(...nums.map(Number)) : 7;
-                const minDays = 3 + etaDays; // 3 days production + shipping
-                const minDate = new Date(Date.now() + minDays * 86400000).toISOString().split("T")[0];
+                const minDays = 3 + etaDays;
+                const minDateObj = new Date(Date.now() + minDays * 86400000);
+                minDateObj.setHours(0,0,0,0);
+                const selDateObj = deliveryDate ? new Date(deliveryDate + "T00:00:00") : null;
+                const calYear = selDateObj ? selDateObj.getFullYear() : minDateObj.getFullYear();
+                const calMonth = selDateObj ? selDateObj.getMonth() : minDateObj.getMonth();
+                // calView is managed at component level
+                const DAYS = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+                const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+                const firstDay = new Date(calView.y, calView.m, 1).getDay();
+                const daysInMonth = new Date(calView.y, calView.m+1, 0).getDate();
+                const cells = [];
+                for(let i=0;i<firstDay;i++) cells.push(null);
+                for(let d=1;d<=daysInMonth;d++) cells.push(d);
+                const isDisabled = (d) => { const dt = new Date(calView.y, calView.m, d); dt.setHours(0,0,0,0); return dt < minDateObj; };
+                const isSelected = (d) => selDateObj && selDateObj.getFullYear()===calView.y && selDateObj.getMonth()===calView.m && selDateObj.getDate()===d;
+                const isToday = (d) => { const t=new Date(); return t.getFullYear()===calView.y && t.getMonth()===calView.m && t.getDate()===d; };
+                const prevMonth = () => { const nm = calView.m===0?{y:calView.y-1,m:11}:{y:calView.y,m:calView.m-1}; setCalView(nm); };
+                const nextMonth = () => { const nm = calView.m===11?{y:calView.y+1,m:0}:{y:calView.y,m:calView.m+1}; setCalView(nm); };
+                const pickDay = (d) => { if(isDisabled(d)) return; const dt=new Date(calView.y,calView.m,d); const iso=dt.toISOString().split("T")[0]; setDeliveryDate(iso); };
+                const canGoPrev = () => { const prev = calView.m===0?new Date(calView.y-1,11,1):new Date(calView.y,calView.m-1,1); return prev <= minDateObj; };
                 return (
-                  <div style={{marginTop:"4px"}}>
-                    <label style={{display:"block",fontSize:"13px",fontWeight:600,color:"#555",marginBottom:"6px"}}>📅 When do you need it?</label>
-                    <input type="date" value={deliveryDate} onChange={e=>setDeliveryDate(e.target.value)} min={minDate} style={{width:"100%",padding:"10px 12px",borderRadius:"8px",border:"1.5px solid #e8c8ca",fontSize:"14px",boxSizing:"border-box",color:deliveryDate?"#2d1b1e":"#999"}}/>
-                    {!deliveryDate && <p style={{color:"#c8737a",fontSize:"12px",margin:"4px 0 0"}}>Please select a date</p>}
+                  <div style={{marginTop:"8px"}}>
+                    <label style={{display:"block",fontSize:"13px",fontWeight:600,color:"#555",marginBottom:"10px"}}>📅 When do you need it?</label>
+                    <div style={{background:"#fff",borderRadius:"14px",border:"1.5px solid #e8c8ca",overflow:"hidden",boxShadow:"0 2px 12px rgba(200,115,122,0.1)"}}>
+                      {/* Header */}
+                      <div style={{background:"linear-gradient(135deg,#c8737a,#e8909a)",padding:"14px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                        <button onClick={prevMonth} disabled={canGoPrev()} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:"8px",width:"32px",height:"32px",color:"#fff",fontSize:"16px",cursor:canGoPrev()?"not-allowed":"pointer",opacity:canGoPrev()?0.4:1}}>‹</button>
+                        <span style={{color:"#fff",fontWeight:700,fontSize:"15px"}}>{MONTHS[calView.m]} {calView.y}</span>
+                        <button onClick={nextMonth} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:"8px",width:"32px",height:"32px",color:"#fff",fontSize:"16px",cursor:"pointer"}}>›</button>
+                      </div>
+                      {/* Day names */}
+                      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",padding:"10px 12px 4px",gap:"2px"}}>
+                        {DAYS.map(d=><div key={d} style={{textAlign:"center",fontSize:"11px",fontWeight:700,color:"#c8737a",padding:"4px 0"}}>{d}</div>)}
+                      </div>
+                      {/* Days grid */}
+                      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",padding:"0 12px 12px",gap:"3px"}}>
+                        {cells.map((d,i)=> d===null
+                          ? <div key={"e"+i}/>
+                          : <button key={d} onClick={()=>pickDay(d)} disabled={isDisabled(d)} style={{
+                              border:"none",borderRadius:"8px",padding:"7px 2px",fontSize:"13px",cursor:isDisabled(d)?"not-allowed":"pointer",
+                              fontWeight:isSelected(d)?700:400,
+                              background:isSelected(d)?"#c8737a":isToday(d)?"#fff0f1":"transparent",
+                              color:isSelected(d)?"#fff":isDisabled(d)?"#ddd":isToday(d)?"#c8737a":"#2d1b1e",
+                              transition:"background .15s"
+                            }}>{d}</button>
+                        )}
+                      </div>
+                      {/* Selected date display */}
+                      {deliveryDate && <div style={{borderTop:"1px solid #f0e0e0",padding:"10px 16px",textAlign:"center",fontSize:"13px",color:"#c8737a",fontWeight:600}}>
+                        🌸 Needed by: {new Date(deliveryDate+"T00:00:00").toLocaleDateString("en-CA",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}
+                      </div>}
+                    </div>
+                    {!deliveryDate && <p style={{color:"#c8737a",fontSize:"12px",margin:"6px 0 0"}}>Please select a delivery date</p>}
                     <div style={{marginTop:"10px",padding:"10px 12px",background:"#fff8e7",borderRadius:"8px",border:"1px solid #f0d080",fontSize:"12px",color:"#7a6000",lineHeight:"1.5"}}>
-                      ⚠️ Please note: Canada Post occasionally experiences delays, especially for long-distance orders. We recommend ordering with extra time to spare — your bouquet deserves to arrive on time! 🌸
+                      ⚠️ Canada Post occasionally delays long-distance shipments. We recommend ordering with extra time — your bouquet deserves to arrive on time! 🌸
                     </div>
                   </div>
                 );
