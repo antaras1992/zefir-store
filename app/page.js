@@ -228,12 +228,12 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
   const ProductCard = ({ p }) => (
     <div className={styles.productCard} onClick={() => openProduct(p)}>
       <div className={styles.productImg} style={{ background: p.color }}>
-        {p.badge && <span className={styles.productBadge}>{p.badge}</span>}
-        {p.image ? <img src={p.image} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} /> : <Flower type={p.flower} size={90} />}
+        {p.image ? <img src={p.image} alt={p.name} /> : <Flower type={p.flower} size={120} />}
       </div>
+      {p.badge && <span className={styles.productBadge}>{p.badge}</span>}
       <div className={styles.productBody}>
         <div className={styles.productCat}>{p.cat}</div>
-        <div className={`${styles.productName} ${styles.serif}`}>{p.name}</div>
+        <div className={styles.productName}>{p.name}</div>
         <div className={styles.productFooter}>
           <div className={styles.productPrice}>{priceRange(p)}<small>CAD</small></div>
           <span className={styles.productArrow}>→</span>
