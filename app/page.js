@@ -246,6 +246,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
           <a className={styles.navLink} onClick={() => goShop("all")}>Shop</a>
           <a className={styles.navLink} onClick={() => goShop("bouquets")}>Bouquets</a>
           <a className={styles.navLink} onClick={() => goShop("boxes")}>Gift Boxes</a>
+          <a className={styles.navLink} href="/gallery">Gallery</a>
           <a className={styles.navLink} onClick={goAbout}>About</a>
         </div>
         <div className={styles.navRight}>
@@ -260,7 +261,8 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
           <a onClick={() => goShop("bouquets")}>Bouquets</a>
           <a onClick={() => goShop("boxes")}>Gift Boxes</a>
           <a onClick={() => goShop("extras")}>Extras</a>
-          <a onClick={goAbout}>About</a>
+          <a href="/gallery">Gallery</a>
+            <a onClick={goAbout}>About</a>
         </div>
       )}
 
@@ -275,6 +277,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
               <div className={styles.heroBtns}>
                 <a className={`${styles.btn} ${styles.btnPrimary}`} onClick={() => goShop("all")}>Shop Collection</a>
                 <a className={`${styles.btn} ${styles.btnOutline}`} onClick={() => goShop("bouquets")}>View Bouquets</a>
+                <a className={`${styles.btn} ${styles.btnOutline}`} href="/gallery">Our Gallery</a>
               </div>
             </div>
             <div className={styles.heroVisual}>
