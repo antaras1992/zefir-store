@@ -181,7 +181,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
       const data = await res.json();
       if (data.options && data.options.length > 0) {
         setShipOptions(data.options);
-        setSelShip(data.options[0]);
+        // Don't auto-select — let user pick from the list
       } else {
         showToast(data.error || "No shipping options found");
       }
@@ -234,7 +234,10 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
       <div className={styles.productBody}>
         <div className={styles.productCat}>{p.cat}</div>
         <div className={`${styles.productName} ${styles.serif}`}>{p.name}</div>
-        <div className={styles.productPrice}>{priceRange(p)} <small>CAD</small></div>
+        <div className={styles.productFooter}>
+          <div className={styles.productPrice}>{priceRange(p)}<small>CAD</small></div>
+          <span className={styles.productArrow}>→</span>
+        </div>
       </div>
     </div>
   );
@@ -303,34 +306,16 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
             <p className={styles.secSub}>Handcrafted marshmallow flowers for every occasion.</p>
             <div className={styles.catTiles}>
               <div className={styles.catTile} onClick={() => goShop("bouquets")}>
-                <div className={styles.catTileImg} style={{ background: "linear-gradient(135deg,#f9dde8 0%,#f0b8cc 60%,#e896b0 100%)" }}>
-                  <div style={{position:"absolute",bottom:-10,right:-10,opacity:0.35,transform:"rotate(-15deg)"}}><Flower type="tulip" size={180} /></div>
-                  <div style={{position:"absolute",top:16,left:16,opacity:0.22,transform:"rotate(20deg)"}}><Flower type="tulip" size={90} /></div>
-                </div>
-                <div className={styles.catTileBody}>
-                  <div className={styles.catTileName}>Bouquets</div>
-                  <div className={styles.catTileCount}><span>Tulip &amp; Mixed · from $50</span><span className={styles.catTileArrow}>→</span></div>
-                </div>
+                <div className={styles.catTileImg} style={{ background: "#FBEAF0" }}><Flower type="tulip" size={80} /></div>
+                <div className={styles.catTileBody}><div className={`${styles.catTileName} ${styles.serif}`}>Bouquets</div><div className={styles.catTileCount}>Tulip &amp; Mixed · from $50</div></div>
               </div>
               <div className={styles.catTile} onClick={() => goShop("boxes")}>
-                <div className={styles.catTileImg} style={{ background: "linear-gradient(135deg,#fde8df 0%,#f8c4a8 60%,#f0a07a 100%)" }}>
-                  <div style={{position:"absolute",bottom:-8,right:-8,opacity:0.35,transform:"rotate(10deg)"}}><Flower type="box" size={180} /></div>
-                  <div style={{position:"absolute",top:20,left:14,opacity:0.2,transform:"rotate(-10deg)"}}><Flower type="box" size={80} /></div>
-                </div>
-                <div className={styles.catTileBody}>
-                  <div className={styles.catTileName}>Gift Boxes</div>
-                  <div className={styles.catTileCount}><span>4–20 pieces · from $12</span><span className={styles.catTileArrow}>→</span></div>
-                </div>
+                <div className={styles.catTileImg} style={{ background: "#FAECE7" }}><Flower type="box" size={80} /></div>
+                <div className={styles.catTileBody}><div className={`${styles.catTileName} ${styles.serif}`}>Gift Boxes</div><div className={styles.catTileCount}>4–20 pieces · from $12</div></div>
               </div>
               <div className={styles.catTile} onClick={() => goShop("extras")}>
-                <div className={styles.catTileImg} style={{ background: "linear-gradient(135deg,#ede8f9 0%,#d8c8f4 60%,#bfa8e8 100%)" }}>
-                  <div style={{position:"absolute",bottom:-10,right:-10,opacity:0.35,transform:"rotate(-8deg)"}}><Flower type="single" size={180} /></div>
-                  <div style={{position:"absolute",top:18,left:12,opacity:0.2,transform:"rotate(15deg)"}}><Flower type="basket" size={80} /></div>
-                </div>
-                <div className={styles.catTileBody}>
-                  <div className={styles.catTileName}>Extras</div>
-                  <div className={styles.catTileCount}><span>Single flowers · baskets</span><span className={styles.catTileArrow}>→</span></div>
-                </div>
+                <div className={styles.catTileImg} style={{ background: "#F5F0FC" }}><Flower type="single" size={80} /></div>
+                <div className={styles.catTileBody}><div className={`${styles.catTileName} ${styles.serif}`}>Extras</div><div className={styles.catTileCount}>Single flowers · baskets</div></div>
               </div>
             </div>
           </section>
