@@ -15,7 +15,9 @@
 .navLinks { display: flex; gap: 28px; align-items: center; }
 .navLink { font-size: 13px; color: var(--gray2); letter-spacing: 0.3px; transition: color .2s; }
 .navLink:hover { color: var(--rose); }
-.navRight { display: flex; align-items: center; gap: 16px; }
+.navRight { display: flex; align-items: center; gap: 12px; }
+.socialBtn { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: #fce8ef; color: #c44a72; transition: background .2s, transform .2s, color .2s; text-decoration: none; }
+.socialBtn:hover { background: #D4537E; color: #fff; transform: translateY(-2px); }
 .navCart { position: relative; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; }
 .cartBadge { background: var(--rose); color: #fff; font-size: 11px; font-weight: 600; min-width: 18px; height: 18px; border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 0 5px; }
 .navToggle { display: none; font-size: 24px; color: var(--text); background: none; border: none; cursor: pointer; line-height: 1; }
