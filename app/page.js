@@ -7,7 +7,7 @@ import styles from "./page.module.css";
 const PRODUCTS = [
   { id: "tulip-bouquet", cat: "bouquets", name: "Tulip Bouquet", badge: "Bestseller", featured: true,
     desc: "Hand-piped marshmallow tulips arranged into a beautiful edible bouquet. Made fresh to order in our Edmonton kitchen.",
-  color: "#FBEAF0", flower: "tulip", image: "/tulip-bouquet.jpg",
+  color: "#FBEAF0", flower: "tulip", selectColor: true, image: "/tulip-bouquet.jpg",
     sizes: [{ n: "S", d: "~15 cm", p: 50 }, { n: "M", d: "~20 cm", p: 70 }, { n: "L", d: "~30 cm", p: 90 }],
     flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
   { id: "mixed-bouquet", cat: "bouquets", name: "Mixed Flower Bouquet", badge: "Premium", featured: true,
@@ -16,27 +16,27 @@ const PRODUCTS = [
     sizes: [{ n: "S", d: "~15 cm", p: 70 }, { n: "M", d: "~20 cm", p: 90 }, { n: "L", d: "~30 cm", p: 120 }],
     flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
   { id: "tulip-box-4", cat: "boxes", name: "Tulip Box — 4 pieces", badge: "Min. 4 boxes", featured: false,
-color: "#F5F0FC", flower: "box", image: "/tulip-box-4.jpg",
+color: "#F5F0FC", flower: "box", selectColor: true, image: "/tulip-box-4.jpg",
       sizes: [{ n: "Clear box", d: "4 pieces", p: 12 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true, min: 4 },
     { id: "tulip-box-10", cat: "boxes", name: "Tulip Box — 10 pieces", badge: "", featured: true,
     desc: "Ten marshmallow tulips beautifully arranged in a clear gift box.",
-    color: "#FBEAF0", flower: "box", image: "/tulip-box-10.jpg",
+    color: "#FBEAF0", flower: "box", selectColor: true, image: "/tulip-box-10.jpg",
     sizes: [{ n: "Clear box", d: "10 pieces", p: 35 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
   { id: "tulip-box-12", cat: "boxes", name: "Tulip Box — 12 pieces", badge: "", featured: false,
     desc: "A dozen marshmallow tulips in an elegant white gift box.",
-    color: "#FAFAF8", flower: "box", image: "/tulip-box-12.jpg",
+    color: "#FAFAF8", flower: "box", selectColor: true, image: "/tulip-box-12.jpg",
     sizes: [{ n: "White box", d: "12 pieces", p: 35 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
   { id: "tulip-box-20", cat: "boxes", name: "Tulip Box — 20 pieces", badge: "Best value", featured: false,
     desc: "Twenty marshmallow tulips — a generous gift box for someone special.",
-    color: "#FAECE7", flower: "box", image: "/tulip-box-20.jpg",
+    color: "#FAECE7", flower: "box", selectColor: true, image: "/tulip-box-20.jpg",
     sizes: [{ n: "Gift box", d: "20 pieces", p: 50 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
   { id: "single-tulip", cat: "extras", name: "Individual Tulip Flower", badge: "", featured: false,
     desc: "A single marshmallow tulip in its own packaging. Great as a favour or add-on.",
-    color: "#F5F0FC", flower: "single", image: "/single-tulip.jpg",
+    color: "#F5F0FC", flower: "single", selectColor: true, image: "/single-tulip.jpg",
     sizes: [{ n: "Single", d: "1 flower", p: 3 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: false },
   { id: "flower-basket", cat: "extras", name: "Flower Basket", badge: "", featured: false,
     desc: "Marshmallow flowers arranged in a charming basket. A unique gift that stands out.",
-    color: "#FBEAF0", flower: "basket", image: "/flower-basket.jpg",
+    color: "#FBEAF0", flower: "basket", flowerTypes: ["Tulip","Peony","Rose","Ranunculus","Hydrangea","Dahlia","Chrysanthemum"], image: "/flower-basket.jpg",
     sizes: [{ n: "Basket", d: "One size", p: 50 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
 ];
 
@@ -84,6 +84,7 @@ export default function Home() {
   const [selShip, setSelShip] = useState(null);
 const [calcLoading, setCalcLoading] = useState(false);
 const [flowerMode, setFlowerMode] = useState(null);
+  const [selColor, setSelColor] = useState(null);
 const [selFlowers, setSelFlowers] = useState([]);
 const [flowerColors, setFlowerColors] = useState({});
 
@@ -98,7 +99,7 @@ const [flowerColors, setFlowerColors] = useState({});
 
   const openProduct = (p) => {
     setProduct(p); setSelSize(0); setSelFlavor(0); setSelQty(p.min || 1); setSelMsg("");
-setPage("product"); window.scrollTo(0, 0);setFlowerMode(null); setSelFlowers([]); setFlowerColors({});
+setPage("product"); window.scrollTo(0, 0);setFlowerMode(null); setSelFlowers([]); setFlowerColors({}); setSelColor(null);
 };
   const priceRange = (p) => {
     const prices = p.sizes.map((s) => s.p);
@@ -111,7 +112,7 @@ setPage("product"); window.scrollTo(0, 0);setFlowerMode(null); setSelFlowers([])
     setCart([...cart, {
       id: p.id, name: p.name, size: p.sizes[selSize].n, flavor: p.flavors[selFlavor],
 price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
-      flowers: p.flowerTypes ? selFlowers.map(f => `${f} (${flowerColors[f]||'?'})`).join(', ') : null,
+      flowers: p.flowerTypes ? selFlowers.map(f => `${f} (${flowerColors[f]||'?'})`).join(', ') : p.selectColor && selColor ? `Color: ${selColor}` : null,
     }]);
     showToast("Added to cart ✓");
     setCartOpen(true);
@@ -387,6 +388,16 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                   <button key={i} className={`${styles.optBtn} ${i === selFlavor ? styles.optActive : ""}`} onClick={() => setSelFlavor(i)}>{f}</button>
                 ))}
               </div>
+
+{product.selectColor && (<>
+  <div className={styles.pdpLabel}>Select color</div>
+  <div className={styles.optRow} style={{flexWrap:"wrap"}}>
+    {["White","Yellow","Pink","Purple","Orange","Blue","Red"].map((c)=>(
+      <button key={c} className={`${styles.optBtn} ${selColor===c?styles.optActive:""}`}
+        onClick={()=>setSelColor(c)}>{c}</button>
+    ))}
+  </div>
+</>)}
 
 {product.flowerTypes && (<>
   <div className={styles.pdpLabel}>Flower arrangement</div>
