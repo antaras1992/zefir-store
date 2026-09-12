@@ -194,6 +194,8 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
 
   const [checkingOut, setCheckingOut] = useState(false);
   const [deliveryDate, setDeliveryDate] = useState("");
+  const [infoModal, setInfoModal] = useState(null);
+  const [faqOpen, setFaqOpen] = useState(null);
   const [calView, setCalView] = useState({y: new Date().getFullYear(), m: new Date().getMonth()});
   const handleCheckout = async () => {
     if (cart.length === 0) return;
@@ -736,9 +738,9 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
           <div className={styles.footerCol}>
             <h5>Info</h5>
             <a onClick={goAbout}>About Us</a>
-            <a>Shipping</a>
-            <a>FAQ</a>
-            <a>Contact</a>
+            <a onClick={() => setInfoModal("shipping")} style={{cursor:"pointer"}}>Shipping</a>
+            <a onClick={() => setInfoModal("faq")} style={{cursor:"pointer"}}>FAQ</a>
+            <a onClick={() => setInfoModal("contact")} style={{cursor:"pointer"}}>Contact</a>
           </div>
         </div>
         <div className={styles.footerBottom}>
@@ -747,7 +749,49 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
         </div>
       </footer>
 
-      {toast && <div className={`${styles.toast} ${styles.toastShow}`}>{toast}</div>}
+      
+      {/* INFO MODALS */}
+      {infoModal && (
+        <div className={styles.infoOverlay} onClick={() => setInfoModal(null)}>
+          <div className={styles.infoModal} onClick={e => e.stopPropagation()}>
+            <button className={styles.infoClose} onClick={() => setInfoModal(null)}>×</button>
+            {infoModal === "shipping" && (<>
+              <div className={styles.infoIcon}>🚚</div>
+              <h2 className={styles.infoTitle}>Shipping &amp; Delivery</h2>
+              <div className={styles.infoList}>
+                {["Free local delivery on orders $100+","Leduc area delivery — always free","Canada-wide shipping via Canada Post","Orders ship within 3 business days","Free pickup available in Leduc for local orders"].map((t,i) => (
+                  <div key={i} className={styles.infoItem}><span className={styles.infoCheck}>✓</span><div>{t}</div></div>
+                ))}
+              </div>
+            </>)}
+            {infoModal === "faq" && (<>
+              <div className={styles.infoIcon}>💬</div>
+              <h2 className={styles.infoTitle}>Frequently Asked Questions</h2>
+              <div className={styles.faqList}>
+                {[{q:"How long do marshmallow bouquets last?",a:"Up to 3 weeks at room temperature. Keep away from direct sunlight and heat."},{q:"Can I customize my bouquet?",a:"Yes! Contact us for custom orders — colours, size, message."},{q:"Do you deliver on weekends?",a:"Yes, local delivery is available 7 days a week in Edmonton & Leduc area."},{q:"How far in advance should I order?",a:"Minimum 2–3 days for standard orders, 1 week for custom bouquets."},{q:"Are your products nut-free?",a:"Yes! Our marshmallow bouquets are nut-free."}].map((item,i) => (
+                  <div key={i} className={styles.faqItem} onClick={() => setFaqOpen(faqOpen === i ? null : i)}>
+                    <div className={styles.faqQ}><span>{item.q}</span><span className={styles.faqArrow}>{faqOpen === i ? "−" : "+"}</span></div>
+                    {faqOpen === i && <div className={styles.faqA}>{item.a}</div>}
+                  </div>
+                ))}
+              </div>
+            </>)}
+            {infoModal === "contact" && (<>
+              <div className={styles.infoIcon}>🌸</div>
+              <h2 className={styles.infoTitle}>Get in Touch</h2>
+              <p className={styles.infoSub}>We would love to hear from you!</p>
+              <div className={styles.contactCards}>
+                <a className={styles.contactCard} href="https://www.instagram.com/handmade_zefir_canada" target="_blank" rel="noopener noreferrer"><span className={styles.contactCardIcon}>📸</span><div><strong>Instagram</strong><br/><span>@handmade_zefir_canada</span></div></a>
+                <a className={styles.contactCard} href="https://www.facebook.com/share/1FeZwWCENb/" target="_blank" rel="noopener noreferrer"><span className={styles.contactCardIcon}>👍</span><div><strong>Facebook</strong><br/><span>Zefir Canada</span></div></a>
+                <a className={styles.contactCard} href="mailto:nataliyakhemii@icloud.com"><span className={styles.contactCardIcon}>✉️</span><div><strong>Email</strong><br/><span>nataliyakhemii@icloud.com</span></div></a>
+              </div>
+              <div className={styles.contactNote}>📍 Edmonton &amp; Leduc, Alberta · Reply within 24 hours</div>
+            </>)}
+          </div>
+        </div>
+      )}
+
+{toast && <div className={`${styles.toast} ${styles.toastShow}`}>{toast}</div>}
     </div>
   );
 }
