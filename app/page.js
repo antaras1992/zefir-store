@@ -181,7 +181,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
       const data = await res.json();
       if (data.options && data.options.length > 0) {
         setShipOptions(data.options);
-        setSelShip(data.options[0]);
+        // Don't auto-select — let user pick from the list
       } else {
         showToast(data.error || "No shipping options found");
       }
