@@ -621,9 +621,24 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
             </div>
 
             <div style={{marginBottom:"12px"}}>
-              <label style={{display:"block",fontSize:"13px",fontWeight:600,color:"#555",marginBottom:"6px"}}>📅 When do you need it?</label>
-              <input type="date" value={deliveryDate} onChange={e=>setDeliveryDate(e.target.value)} min={new Date(Date.now()+3*86400000).toISOString().split("T")[0]} style={{width:"100%",padding:"10px 12px",borderRadius:"8px",border:"1.5px solid #e8c8ca",fontSize:"14px",boxSizing:"border-box",color:deliveryDate?"#2d1b1e":"#999"}}/>
-              {!deliveryDate && <p style={{color:"#c8737a",fontSize:"12px",margin:"4px 0 0"}}>Please select a date</p>}
+              {selShip && (() => {
+                // Parse ETA days from shipping option (e.g. "2–5 business days" → 5)
+                const etaText = selShip.eta || "";
+                const nums = etaText.match(/\d+/g);
+                const etaDays = nums ? Math.max(...nums.map(Number)) : 7;
+                const minDays = 3 + etaDays; // 3 days production + shipping
+                const minDate = new Date(Date.now() + minDays * 86400000).toISOString().split("T")[0];
+                return (
+                  <div style={{marginTop:"4px"}}>
+                    <label style={{display:"block",fontSize:"13px",fontWeight:600,color:"#555",marginBottom:"6px"}}>📅 When do you need it?</label>
+                    <input type="date" value={deliveryDate} onChange={e=>setDeliveryDate(e.target.value)} min={minDate} style={{width:"100%",padding:"10px 12px",borderRadius:"8px",border:"1.5px solid #e8c8ca",fontSize:"14px",boxSizing:"border-box",color:deliveryDate?"#2d1b1e":"#999"}}/>
+                    {!deliveryDate && <p style={{color:"#c8737a",fontSize:"12px",margin:"4px 0 0"}}>Please select a date</p>}
+                    <div style={{marginTop:"10px",padding:"10px 12px",background:"#fff8e7",borderRadius:"8px",border:"1px solid #f0d080",fontSize:"12px",color:"#7a6000",lineHeight:"1.5"}}>
+                      ⚠️ Please note: Canada Post occasionally experiences delays, especially for long-distance orders. We recommend ordering with extra time to spare — your bouquet deserves to arrive on time! 🌸
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
             <div className={styles.cartNote}>Taxes calculated at checkout · 3 days handcrafting time</div>
             <div className={styles.cartTotal}><span>Total</span><span>${grandTotal.toFixed(2)}</span></div>
