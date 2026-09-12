@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./page.module.css";
 
 // ============ PRODUCT DATA ============
@@ -73,9 +73,7 @@ export default function Home() {
   const [selFlavor, setSelFlavor] = useState(0);
   const [selQty, setSelQty] = useState(1);
   const [selMsg, setSelMsg] = useState("");
-  const [cart, setCart] = useState(() => {
-    try { const s = localStorage.getItem("zefir-cart"); return s ? JSON.parse(s) : []; } catch { return []; }
-  });
+  const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [toast, setToast] = useState("");
@@ -87,7 +85,9 @@ export default function Home() {
 const [calcLoading, setCalcLoading] = useState(false);
 const [flowerMode, setFlowerMode] = useState(null);
   const [selColor, setSelColor] = useState(null);
-  const [addCard, setAddCard] = useState(false);
+  const [addCard, setAddCard] = useState(() => {
+    try { return localStorage.getItem("zefir-addCard") === "true"; } catch { return false; }
+  });
   const [pendingColor, setPendingColor] = useState(null);
 const [selFlowers, setSelFlowers] = useState([]);
 const [flowerColors, setFlowerColors] = useState({});
@@ -109,6 +109,19 @@ const [flowerColors, setFlowerColors] = useState({});
       return base;
     });
   }, [addCard]);
+  
+  const _cartMounted = useRef(false);
+  useEffect(() => {
+    if (!_cartMounted.current) {
+      _cartMounted.current = true;
+      try {
+        const saved = localStorage.getItem("zefir-cart");
+        if (saved) setCart(JSON.parse(saved));
+      } catch {}
+    } else {
+      try { localStorage.setItem("zefir-cart", JSON.stringify(cart)); } catch {}
+    }
+  }, [cart]);
 
   const openProduct = (p) => {
     setProduct(p); setSelSize(0); setSelFlavor(0); setSelQty(p.min || 1); setSelMsg("");
@@ -266,7 +279,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
             </div>
             <div className={styles.heroVisual}>
               <div className={styles.heroBadge}>Handmade to order</div>
-              <img src="/hero.jpg" alt="Zefir Canada marshmallow bouquet gift boxes" style={{ width: "100%", height: "100%", objectFit: "fill", borderRadius: "12px" }} />
+              <img src="/hero.jpg" alt="Zefir Canada marshmallow bouquet gift boxes" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px" }} />
               <div className={styles.heroTag}>Looks real. Tastes magical.</div>
             </div>
           </section>
@@ -470,7 +483,17 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                  <>
                   <div style={{marginBottom:"14px"}}>
           <button
-            onClick={()=>setAddCard(v=>!v)}
+            onClick={()=>{
+              setAddCard(v=>{
+                const next=!v;
+                try { localStorage.setItem("zefir-addCard", next); } catch {}
+                setCart(prev=>{
+                  const base=prev.filter(i=>i.id!=="greeting-card");
+                  return next?[...base,{id:"greeting-card",name:"Greeting Card +$5",price:5,qty:1,image:null}]:base;
+                });
+                return next;
+              });
+            }}
             style={{
               padding:"10px 18px",borderRadius:"8px",width:"100%",textAlign:"left",
               border:addCard?"2px solid #c0717a":"1px solid #ddd",
