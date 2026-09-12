@@ -25,11 +25,12 @@ export async function POST(request) {
     // Build the items list
     const items = (session.line_items?.data || [])
       .map((li) => {
-        const name = li.description || li.price?.product?.name || "Item";
+const name = li.price?.product?.name || li.description || "Item";
+        const desc = li.price?.product?.description;
         const qty = li.quantity || 1;
         const amount = ((li.amount_total || 0) / 100).toFixed(2);
-        return `• ${name} ×${qty} — $${amount}`;
-      })
+        return `• ${name}${desc ? ` — ${desc}` : ''} ×${qty} — $${amount}`;
+    })
       .join("\n");
 
     // Card message from product metadata (if any)
@@ -74,7 +75,7 @@ export async function POST(request) {
     const chatId = process.env.TELEGRAM_CHAT_ID;
 
     if (token && chatId) {
-      const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -83,10 +84,6 @@ export async function POST(request) {
           parse_mode: "HTML",
         }),
       });
-      const tgText = await tgRes.text();
-      console.log("TELEGRAM RESPONSE:", tgRes.status, tgText);
-    } else {
-      console.log("TELEGRAM MISSING CREDS:", { hasToken: !!token, hasChat: !!chatId });
     }
 
     return Response.json({ ok: true });
