@@ -223,11 +223,16 @@
   .footerTop { grid-template-columns: 1fr; gap: 24px; }
   .footerBottom { flex-direction: column; text-align: center; gap: 8px; }
   .cartDrawer { width: 100%; }
+  .cartFoot { padding: 16px 20px; }
 }
 @media (max-width: 420px) {
-  .productGrid { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; }
+  .productGrid { grid-template-columns: repeat(2,1fr); gap: 10px; padding: 0 4px; }
   .benefits { grid-template-columns: 1fr; gap: 24px; }
   .heroBtns { flex-direction: column; }
   .heroBtns .btn { width: 100%; text-align: center; box-sizing: border-box; }
   .optBtn { flex: 1; min-width: 90px; }
+  .cartFoot { padding: 16px; }
+  .cartItems { padding: 8px 16px; }
+  .infoModal { padding: 40px 20px 28px; border-radius: 20px 20px 0 0; position: fixed; bottom: 0; left: 0; right: 0; max-width: 100%; max-height: 85vh; }
+  .infoOverlay { align-items: flex-end; padding: 0; }
 }

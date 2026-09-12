@@ -681,20 +681,20 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                     <div style={{background:"#fff",borderRadius:"14px",border:"1.5px solid #e8c8ca",overflow:"hidden",boxShadow:"0 2px 12px rgba(200,115,122,0.1)"}}>
                       {/* Header */}
                       <div style={{background:"linear-gradient(135deg,#c8737a,#e8909a)",padding:"14px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                        <button onClick={prevMonth} disabled={canGoPrev()} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:"8px",width:"32px",height:"32px",color:"#fff",fontSize:"16px",cursor:canGoPrev()?"not-allowed":"pointer",opacity:canGoPrev()?0.4:1}}>‹</button>
+                        <button onClick={prevMonth} disabled={canGoPrev()} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:"8px",width:"40px",height:"40px",color:"#fff",fontSize:"20px",cursor:canGoPrev()?"not-allowed":"pointer",opacity:canGoPrev()?0.4:1}}>‹</button>
                         <span style={{color:"#fff",fontWeight:700,fontSize:"15px"}}>{MONTHS[calView.m]} {calView.y}</span>
-                        <button onClick={nextMonth} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:"8px",width:"32px",height:"32px",color:"#fff",fontSize:"16px",cursor:"pointer"}}>›</button>
+                        <button onClick={nextMonth} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:"8px",width:"40px",height:"40px",color:"#fff",fontSize:"20px",cursor:"pointer"}}>›</button>
                       </div>
                       {/* Day names */}
                       <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",padding:"10px 12px 4px",gap:"2px"}}>
                         {DAYS.map(d=><div key={d} style={{textAlign:"center",fontSize:"11px",fontWeight:700,color:"#c8737a",padding:"4px 0"}}>{d}</div>)}
                       </div>
                       {/* Days grid */}
-                      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",padding:"0 12px 12px",gap:"3px"}}>
+                      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",padding:"0 8px 12px",gap:"2px"}}>
                         {cells.map((d,i)=> d===null
                           ? <div key={"e"+i}/>
                           : <button key={d} onClick={()=>pickDay(d)} disabled={isDisabled(d)} style={{
-                              border:"none",borderRadius:"8px",padding:"7px 2px",fontSize:"13px",cursor:isDisabled(d)?"not-allowed":"pointer",
+                              border:"none",borderRadius:"8px",padding:"clamp(5px,2vw,9px) 2px",minHeight:"36px",fontSize:"clamp(12px,3.5vw,14px)",cursor:isDisabled(d)?"not-allowed":"pointer",
                               fontWeight:isSelected(d)?700:400,
                               background:isSelected(d)?"#c8737a":isToday(d)?"#fff0f1":"transparent",
                               color:isSelected(d)?"#fff":isDisabled(d)?"#ddd":isToday(d)?"#c8737a":"#2d1b1e",
