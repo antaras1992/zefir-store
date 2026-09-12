@@ -624,8 +624,9 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
             <div style={{marginBottom:"12px"}}>
               {selShip && (() => {
                 const etaText = selShip.eta || "";
+                const isLocal = selShip.id === "pickup" || selShip.id === "local" || (selShip.price === 0 && (etaText.toLowerCase().includes("pickup") || etaText.toLowerCase().includes("leduc") || etaText.toLowerCase().includes("edmonton") || etaText.toLowerCase().includes("ready") || etaText.toLowerCase().includes("within")));
                 const nums = etaText.match(/\d+/g);
-                const etaDays = nums ? Math.max(...nums.map(Number)) : 7;
+                const etaDays = isLocal ? 0 : (nums ? Math.max(...nums.map(Number)) : 7);
                 const minDays = 3 + etaDays;
                 const minDateObj = new Date(Date.now() + minDays * 86400000);
                 minDateObj.setHours(0,0,0,0);
