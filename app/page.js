@@ -604,21 +604,37 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                 </button>
               </div>
 
-              {shipOptions.map((opt) => (
-                <label
-                  key={opt.id}
-                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 12px", border: `1px solid ${selShip?.id === opt.id ? "#D4537E" : "#E8E5DF"}`, borderRadius: "8px", marginBottom: "6px", cursor: "pointer", background: selShip?.id === opt.id ? "#FFF5F8" : "#fff" }}
-                >
+              {!selShip ? (
+                shipOptions.map((opt) => (
+                  <label
+                    key={opt.id}
+                    style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 12px", border: "1px solid #E8E5DF", borderRadius: "8px", marginBottom: "6px", cursor: "pointer", background: "#fff" }}
+                  >
+                    <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <input type="radio" checked={false} onChange={() => { setSelShip(opt); setDeliveryDate(""); }} style={{ accentColor: "#D4537E" }} />
+                      <span>
+                        <span style={{ fontSize: "13px", fontWeight: 500, display: "block" }}>{opt.name}</span>
+                        <span style={{ fontSize: "11px", color: "#888780" }}>{opt.eta}</span>
+                      </span>
+                    </span>
+                    <span style={{ fontSize: "13px", fontWeight: 600 }}>{opt.price === 0 ? "Free" : `$${opt.price}`}</span>
+                  </label>
+                ))
+              ) : (
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 12px", border: "1px solid #D4537E", borderRadius: "8px", background: "#FFF5F8", marginBottom: "6px" }}>
                   <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <input type="radio" checked={selShip?.id === opt.id} onChange={() => setSelShip(opt)} style={{ accentColor: "#D4537E" }} />
+                    <span style={{ width: "14px", height: "14px", borderRadius: "50%", background: "#D4537E", display: "inline-block", flexShrink: 0 }} />
                     <span>
-                      <span style={{ fontSize: "13px", fontWeight: 500, display: "block" }}>{opt.name}</span>
-                      <span style={{ fontSize: "11px", color: "#888780" }}>{opt.eta}</span>
+                      <span style={{ fontSize: "13px", fontWeight: 500, display: "block" }}>{selShip.name}</span>
+                      <span style={{ fontSize: "11px", color: "#888780" }}>{selShip.eta}</span>
                     </span>
                   </span>
-                  <span style={{ fontSize: "13px", fontWeight: 600 }}>{opt.price === 0 ? "Free" : `$${opt.price}`}</span>
-                </label>
-              ))}
+                  <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <span style={{ fontSize: "13px", fontWeight: 600 }}>{selShip.price === 0 ? "Free" : `$${selShip.price}`}</span>
+                    <button onClick={() => { setSelShip(null); setDeliveryDate(""); }} style={{ fontSize: "11px", color: "#D4537E", background: "none", border: "none", cursor: "pointer", textDecoration: "underline", padding: 0 }}>Change</button>
+                  </span>
+                </div>
+              )}
             </div>
 
             <div style={{marginBottom:"12px"}}>
