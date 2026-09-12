@@ -86,6 +86,7 @@ const [calcLoading, setCalcLoading] = useState(false);
 const [flowerMode, setFlowerMode] = useState(null);
   const [selColor, setSelColor] = useState(null);
   const [addCard, setAddCard] = useState(false);
+  const [pendingColor, setPendingColor] = useState(null);
 const [selFlowers, setSelFlowers] = useState([]);
 const [flowerColors, setFlowerColors] = useState({});
 
@@ -100,7 +101,8 @@ const [flowerColors, setFlowerColors] = useState({});
 
   const openProduct = (p) => {
     setProduct(p); setSelSize(0); setSelFlavor(0); setSelQty(p.min || 1); setSelMsg("");
-setPage("product"); window.scrollTo(0, 0);setFlowerMode(null); setSelFlowers([]); setFlowerColors({}); setSelColor(null); setAddCard(false);
+setPage("product"); window.scrollTo(0, 0);setFlowerMode(null); setSelFlowers([]); setFlowerColors({}); setSelColor(null);
+    setAddCard(false); setPendingColor(null); setAddCard(false);
 };
   const priceRange = (p) => {
     const prices = p.sizes.map((s) => s.p);
@@ -401,36 +403,52 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
 </>)}
 
 {product.flowerTypes && (<>
-  <div className={styles.pdpLabel}>Flower arrangement</div>
-  <div className={styles.optRow}>
-    <button className={`${styles.optBtn} ${flowerMode==="single"?styles.optActive:""}`} onClick={()=>{setFlowerMode("single");setSelFlowers([]);setFlowerColors({});}}>One type</button>
-    <button className={`${styles.optBtn} ${flowerMode==="mix"?styles.optActive:""}`} onClick={()=>{setFlowerMode("mix");setSelFlowers([]);setFlowerColors({});}}>Mix</button>
-  </div>
-  {flowerMode&&(<>
-    <div className={styles.pdpLabel}>{flowerMode==="mix"?`Select up to 3 flowers (${selFlowers.length}/3)`:"Select flower"}</div>
-    <div className={styles.optRow} style={{flexWrap:"wrap"}}>
-      {product.flowerTypes.map((f)=>{
-        const sel=selFlowers.includes(f);
-        const maxed=flowerMode==="mix"&&selFlowers.length>=3&&!sel;
-        return(<button key={f} disabled={maxed} style={maxed?{opacity:0.4}:{}} className={`${styles.optBtn} ${sel?styles.optActive:""}`}
-          onClick={()=>{
-            if(flowerMode==="single"){setSelFlowers([f]);setFlowerColors({});}
-            else{if(sel){const nf=selFlowers.filter(x=>x!==f);const nc={...flowerColors};delete nc[f];setSelFlowers(nf);setFlowerColors(nc);}
-            else if(selFlowers.length<3){setSelFlowers([...selFlowers,f]);}}
-          }}>{f}</button>);
-      })}
-    </div>
-    {(()=>{const pending=selFlowers.find(f=>!flowerColors[f]);if(!pending)return null;return(<>
-      <div className={styles.pdpLabel}>Color for {pending}</div>
-      <div className={styles.optRow} style={{flexWrap:"wrap"}}>
-        {["White","Yellow","Pink","Purple","Orange","Blue","Red"].map((c)=>(
-          <button key={c} className={`${styles.optBtn} ${flowerColors[pending]===c?styles.optActive:""}`}
-            onClick={()=>setFlowerColors({...flowerColors,[pending]:c})}>{c}</button>
-        ))}
-      </div>
-    </>);})()}
-  </>)}
-</>)}
+        <div className={styles.pdpLabel}>
+          {flowerMode===null ? "Choose type" : pendingColor ? `Color for: ${pendingColor}` : `Flowers: ${selFlowers.length}${flowerMode==="mix" && selFlowers.length>=2?" (can add one more)":""}`}
+        </div>
+
+        {flowerMode===null && (
+          <div className={styles.optRow}>
+            <button className={styles.optBtn} onClick={()=>setFlowerMode("single")}>Single</button>
+            <button className={styles.optBtn} onClick={()=>setFlowerMode("mix")}>Mix (2–3)</button>
+          </div>
+        )}
+
+        {flowerMode!==null && !pendingColor && (flowerMode==="mix" ? selFlowers.length<3 : selFlowers.length<1) && (
+          <div className={styles.optRow} style={{flexWrap:"wrap"}}>
+            {product.flowerTypes.map((f)=>(
+              <button key={f}
+                className={`${styles.optBtn} ${selFlowers.includes(f)?styles.optActive:""}`}
+                disabled={selFlowers.includes(f)}
+                style={selFlowers.includes(f)?{opacity:0.35,cursor:'not-allowed'}:{}}
+                onClick={()=>{ setSelFlowers(prev=>[...prev,f]); setPendingColor(f); }}
+              >{f}</button>
+            ))}
+          </div>
+        )}
+
+        {pendingColor && (<>
+          <div className={styles.optRow} style={{flexWrap:"wrap"}}>
+            {["White","Yellow","Pink","Purple","Orange","Blue","Red"].map((col)=>(
+              <button key={col}
+                className={`${styles.optBtn} ${flowerColors[pendingColor]===col?styles.optActive:""}`}
+                onClick={()=>{ setFlowerColors(prev=>({...prev,[pendingColor]:col})); setPendingColor(null); }}
+              >{col}</button>
+            ))}
+          </div>
+        </>)}
+
+        {selFlowers.length>0 && (
+          <div style={{fontSize:"13px",color:"#888",marginTop:"6px",lineHeight:"1.8"}}>
+            {selFlowers.map(f=>(
+              <span key={f} style={{display:"inline-block",marginRight:"12px",
+                color: flowerColors[f]?"#555":"#c0717a"}}>
+                {f}{flowerColors[f]?` — ${flowerColors[f]}`:" — choose color ↑"}
+              </span>
+            ))}
+          </div>
+        )}
+      </>)}
 
 {product.card && (
                  <>
@@ -450,6 +468,22 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
             }}
           >
             {addCard ? "✓ Greeting card added (+$5)" : "+ Add greeting card with inscription (+$5)"}
+          </button>
+        </div>
+
+        <div style={{marginBottom:"14px"}}>
+          <button
+            onClick={()=>setAddCard(v=>!v)}
+            style={{
+              padding:"10px 18px",borderRadius:"8px",width:"100%",textAlign:"left",
+              border:addCard?"2px solid #c0717a":"1px solid #ddd",
+              background:addCard?"#fff0f2":"#fafafa",
+              color:addCard?"#c0717a":"#666",
+              fontWeight:addCard?"600":"400",
+              cursor:"pointer",fontSize:"14px"
+            }}
+          >
+            {addCard?"✓ Greeting card with inscription — +$5":"＋ Add greeting card with inscription (+$5)"}
           </button>
         </div>
 
