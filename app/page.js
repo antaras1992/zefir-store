@@ -99,6 +99,15 @@ const [flowerColors, setFlowerColors] = useState({});
   const goHome = () => { setPage("home"); setMenuOpen(false); window.scrollTo(0, 0); };
   const goAbout = () => { setPage("about"); setMenuOpen(false); window.scrollTo(0, 0); };
 
+  
+  useEffect(() => {
+    setCart(prev => {
+      const base = prev.filter(i => i.id !== "greeting-card");
+      if (addCard) return [...base, {id:"greeting-card",name:"Greeting Card +$5",price:5,qty:1,image:null}];
+      return base;
+    });
+  }, [addCard]);
+
   const openProduct = (p) => {
     setProduct(p); setSelSize(0); setSelFlavor(0); setSelQty(p.min || 1); setSelMsg("");
 setPage("product"); window.scrollTo(0, 0);setFlowerMode(null); setSelFlowers([]); setFlowerColors({}); setSelColor(null);
@@ -452,26 +461,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
 
 {product.card && (
                  <>
-                  <div style={{marginBottom:"12px"}}>
-          <div className={styles.pdpLabel}>Greeting card</div>
-          <button
-            onClick={()=>setAddCard(v=>!v)}
-            style={{
-              padding:"8px 18px",
-              borderRadius:"8px",
-              border: addCard ? "2px solid #c0717a" : "1px solid #ccc",
-              background: addCard ? "#fff0f2" : "#fff",
-              color: addCard ? "#c0717a" : "#555",
-              fontWeight: addCard ? "600" : "400",
-              cursor:"pointer",
-              fontSize:"14px"
-            }}
-          >
-            {addCard ? "✓ Greeting card added (+$5)" : "+ Add greeting card with inscription (+$5)"}
-          </button>
-        </div>
-
-        <div style={{marginBottom:"14px"}}>
+                  <div style={{marginBottom:"14px"}}>
           <button
             onClick={()=>setAddCard(v=>!v)}
             style={{
