@@ -73,7 +73,9 @@ export default function Home() {
   const [selFlavor, setSelFlavor] = useState(0);
   const [selQty, setSelQty] = useState(1);
   const [selMsg, setSelMsg] = useState("");
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    try { const s = localStorage.getItem("zefir-cart"); return s ? JSON.parse(s) : []; } catch { return []; }
+  });
   const [cartOpen, setCartOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [toast, setToast] = useState("");
@@ -153,21 +155,26 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
     setCalcLoading(true);
     setShipOptions([]);
     setSelShip(null);
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 12000);
     try {
       const res = await fetch("/api/shipping", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: cart, postalCode: postal }),
+        signal: ctrl.signal,
       });
+      clearTimeout(timer);
       const data = await res.json();
       if (data.options && data.options.length > 0) {
         setShipOptions(data.options);
-        setSelShip(data.options[0]); // pre-select first
+        setSelShip(data.options[0]);
       } else {
         showToast(data.error || "No shipping options found");
       }
     } catch (e) {
-      showToast("Couldn't calculate shipping");
+      clearTimeout(timer);
+      showToast(e.name === "AbortError" ? "Request timed out — try again" : "Couldn't calculate shipping");
     }
     setCalcLoading(false);
   };
@@ -556,7 +563,8 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                   type="text"
                   placeholder="Postal code (e.g. T5J 0N3)"
                   value={postal}
-                  onChange={(e) => setPostal(e.target.value)}
+                  onChange={(e) => { setPostal(e.target.value); setShipOptions([]); setSelShip(null); }}
+                  onKeyDown={(e) => e.key==="Enter" && calcShipping()}
                   style={{ flex: 1, border: "1px solid #E8E5DF", borderRadius: "6px", padding: "10px 12px", fontSize: "13px", fontFamily: "'Inter',sans-serif", outline: "none" }}
                 />
                 <button
