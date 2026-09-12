@@ -4,7 +4,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
   try {
-    const { items, shipping } = await request.json();
+    const { items, shipping, deliveryDate } = await request.json();
 
     if (!items || items.length === 0) {
       return Response.json({ error: "Cart is empty" }, { status: 400 });
@@ -78,6 +78,7 @@ export async function POST(request) {
       sessionConfig.metadata = {
         shipping_method: shipping.name,
         shipping_price: String(shipping.price),
+        delivery_date: deliveryDate || "Not specified",
       };
     }
 

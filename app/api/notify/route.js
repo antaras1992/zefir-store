@@ -43,6 +43,7 @@ const name = li.price?.product?.name || li.description || "Item";
     // Shipping method from session metadata
     const shipMethod = session.metadata?.shipping_method || "—";
     const shipPrice = session.metadata?.shipping_price || "0";
+    const deliveryDate = session.metadata?.delivery_date || "Not specified";
 
     // Customer + address
     const cust = session.customer_details || {};
@@ -63,6 +64,7 @@ const name = li.price?.product?.name || li.description || "Item";
     let msg = `🎉 <b>New Zefir Canada order!</b>\n\n`;
     msg += `📦 <b>Items:</b>\n${items}\n\n`;
     if (cardMessage) msg += `💌 <b>Card:</b> "${cardMessage}"\n\n`;
+    msg += `📅 <b>Needed by:</b> ${deliveryDate}\n`;
     msg += `🚚 <b>Shipping:</b> ${shipMethod} — $${shipPrice}\n`;
     msg += `📍 <b>Address:</b> ${addressStr}\n`;
     msg += `👤 <b>Name:</b> ${name}\n`;

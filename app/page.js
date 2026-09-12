@@ -193,6 +193,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
   };
 
   const [checkingOut, setCheckingOut] = useState(false);
+  const [deliveryDate, setDeliveryDate] = useState("");
   const handleCheckout = async () => {
     if (cart.length === 0) return;
     if (!selShip) {
@@ -204,7 +205,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart, shipping: selShip }),
+        body: JSON.stringify({ items: cart, shipping: selShip, deliveryDate }),
       });
       const data = await res.json();
       if (data.url) {
@@ -619,6 +620,11 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
               ))}
             </div>
 
+            <div style={{marginBottom:"12px"}}>
+              <label style={{display:"block",fontSize:"13px",fontWeight:600,color:"#555",marginBottom:"6px"}}>📅 When do you need it?</label>
+              <input type="date" value={deliveryDate} onChange={e=>setDeliveryDate(e.target.value)} min={new Date(Date.now()+3*86400000).toISOString().split("T")[0]} style={{width:"100%",padding:"10px 12px",borderRadius:"8px",border:"1.5px solid #e8c8ca",fontSize:"14px",boxSizing:"border-box",color:deliveryDate?"#2d1b1e":"#999"}}/>
+              {!deliveryDate && <p style={{color:"#c8737a",fontSize:"12px",margin:"4px 0 0"}}>Please select a date</p>}
+            </div>
             <div className={styles.cartNote}>Taxes calculated at checkout · 3 days handcrafting time</div>
             <div className={styles.cartTotal}><span>Total</span><span>${grandTotal.toFixed(2)}</span></div>
             <button className={styles.cartCheckout} onClick={handleCheckout} disabled={checkingOut}>{checkingOut ? "Redirecting to payment…" : "Proceed to Checkout"}</button>
