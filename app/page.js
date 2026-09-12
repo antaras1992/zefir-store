@@ -85,6 +85,7 @@ export default function Home() {
 const [calcLoading, setCalcLoading] = useState(false);
 const [flowerMode, setFlowerMode] = useState(null);
   const [selColor, setSelColor] = useState(null);
+  const [addCard, setAddCard] = useState(false);
 const [selFlowers, setSelFlowers] = useState([]);
 const [flowerColors, setFlowerColors] = useState({});
 
@@ -99,7 +100,7 @@ const [flowerColors, setFlowerColors] = useState({});
 
   const openProduct = (p) => {
     setProduct(p); setSelSize(0); setSelFlavor(0); setSelQty(p.min || 1); setSelMsg("");
-setPage("product"); window.scrollTo(0, 0);setFlowerMode(null); setSelFlowers([]); setFlowerColors({}); setSelColor(null);
+setPage("product"); window.scrollTo(0, 0);setFlowerMode(null); setSelFlowers([]); setFlowerColors({}); setSelColor(null); setAddCard(false);
 };
   const priceRange = (p) => {
     const prices = p.sizes.map((s) => s.p);
@@ -433,7 +434,26 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
 
 {product.card && (
                  <>
-                  <div className={styles.pdpLabel}>Add a personal message (optional)</div>
+                  <div style={{marginBottom:"12px"}}>
+          <div className={styles.pdpLabel}>Greeting card</div>
+          <button
+            onClick={()=>setAddCard(v=>!v)}
+            style={{
+              padding:"8px 18px",
+              borderRadius:"8px",
+              border: addCard ? "2px solid #c0717a" : "1px solid #ccc",
+              background: addCard ? "#fff0f2" : "#fff",
+              color: addCard ? "#c0717a" : "#555",
+              fontWeight: addCard ? "600" : "400",
+              cursor:"pointer",
+              fontSize:"14px"
+            }}
+          >
+            {addCard ? "✓ Greeting card added (+$5)" : "+ Add greeting card with inscription (+$5)"}
+          </button>
+        </div>
+
+        <div className={styles.pdpLabel}>Add a personal message (optional)</div>
                   <textarea className={styles.msgField} placeholder="E.g. Happy Birthday! ❤️" value={selMsg} onChange={(e) => setSelMsg(e.target.value)} />
                 </>
               )}

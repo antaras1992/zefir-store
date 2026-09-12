@@ -11,6 +11,16 @@ export async function POST(request) {
     }
 
     const line_items = items.map((item) => {
+    if (item.id === "greeting-card") {
+      return {
+        price_data: {
+          currency: "cad",
+          unit_amount: 500,
+          product_data: { name: "Greeting card with inscription" }
+        },
+        quantity: 1
+      };
+    }
       const details = [];
       if (item.size && item.size !== "Single" && item.size !== "Basket") details.push(item.size);
       if (item.flavor) details.push(item.flavor);if (item.flowers) details.push(`Flowers: ${item.flowers}`);
