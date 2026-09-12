@@ -13,7 +13,7 @@ export async function POST(request) {
     const line_items = items.map((item) => {
       const details = [];
       if (item.size && item.size !== "Single" && item.size !== "Basket") details.push(item.size);
-      if (item.flavor) details.push(item.flavor);
+      if (item.flavor) details.push(item.flavor);if (item.flowers) details.push(`Flowers: ${item.flowers}`);
       const description = details.length > 0 ? details.join(" · ") : undefined;
 
       return {

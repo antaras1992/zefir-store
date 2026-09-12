@@ -7,37 +7,36 @@ import styles from "./page.module.css";
 const PRODUCTS = [
   { id: "tulip-bouquet", cat: "bouquets", name: "Tulip Bouquet", badge: "Bestseller", featured: true,
     desc: "Hand-piped marshmallow tulips arranged into a beautiful edible bouquet. Made fresh to order in our Edmonton kitchen.",
-    color: "#FBEAF0", flower: "tulip",
+  color: "#FBEAF0", flower: "tulip", image: "/tulip-bouquet.jpg",
     sizes: [{ n: "S", d: "~15 cm", p: 50 }, { n: "M", d: "~20 cm", p: 70 }, { n: "L", d: "~30 cm", p: 90 }],
     flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
   { id: "mixed-bouquet", cat: "bouquets", name: "Mixed Flower Bouquet", badge: "Premium", featured: true,
     desc: "A stunning mix of marshmallow flowers in different shapes and colors. Our most impressive arrangement.",
-    color: "#FAECE7", flower: "mixed",
+   color: "#FAECE7", flower: "mixed", image: "/mixed-bouquet.jpg", flowerTypes: ["Tulip","Peony","Rose","Ranunculus","Hydrangea","Dahlia","Chrysanthemum"],
     sizes: [{ n: "S", d: "~15 cm", p: 70 }, { n: "M", d: "~20 cm", p: 90 }, { n: "L", d: "~30 cm", p: 120 }],
     flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
   { id: "tulip-box-4", cat: "boxes", name: "Tulip Box — 4 pieces", badge: "Min. 4 boxes", featured: false,
-    desc: "Four marshmallow tulips in a clear gift box. Perfect little gift or party favour. Minimum order: 4 boxes.",
-    color: "#F5F0FC", flower: "box",
-    sizes: [{ n: "Clear box", d: "4 pieces", p: 12 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true, min: 4 },
-  { id: "tulip-box-10", cat: "boxes", name: "Tulip Box — 10 pieces", badge: "", featured: true,
+color: "#F5F0FC", flower: "box", image: "/tulip-box-4.jpg",
+      sizes: [{ n: "Clear box", d: "4 pieces", p: 12 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true, min: 4 },
+    { id: "tulip-box-10", cat: "boxes", name: "Tulip Box — 10 pieces", badge: "", featured: true,
     desc: "Ten marshmallow tulips beautifully arranged in a clear gift box.",
-    color: "#FBEAF0", flower: "box",
+    color: "#FBEAF0", flower: "box", image: "/tulip-box-10.jpg",
     sizes: [{ n: "Clear box", d: "10 pieces", p: 35 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
   { id: "tulip-box-12", cat: "boxes", name: "Tulip Box — 12 pieces", badge: "", featured: false,
     desc: "A dozen marshmallow tulips in an elegant white gift box.",
-    color: "#FAFAF8", flower: "box",
+    color: "#FAFAF8", flower: "box", image: "/tulip-box-12.jpg",
     sizes: [{ n: "White box", d: "12 pieces", p: 35 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
   { id: "tulip-box-20", cat: "boxes", name: "Tulip Box — 20 pieces", badge: "Best value", featured: false,
     desc: "Twenty marshmallow tulips — a generous gift box for someone special.",
-    color: "#FAECE7", flower: "box",
+    color: "#FAECE7", flower: "box", image: "/tulip-box-20.jpg",
     sizes: [{ n: "Gift box", d: "20 pieces", p: 50 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
   { id: "single-tulip", cat: "extras", name: "Individual Tulip Flower", badge: "", featured: false,
     desc: "A single marshmallow tulip in its own packaging. Great as a favour or add-on.",
-    color: "#F5F0FC", flower: "single",
+    color: "#F5F0FC", flower: "single", image: "/single-tulip.jpg",
     sizes: [{ n: "Single", d: "1 flower", p: 3 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: false },
   { id: "flower-basket", cat: "extras", name: "Flower Basket", badge: "", featured: false,
     desc: "Marshmallow flowers arranged in a charming basket. A unique gift that stands out.",
-    color: "#FBEAF0", flower: "basket",
+    color: "#FBEAF0", flower: "basket", image: "/flower-basket.jpg",
     sizes: [{ n: "Basket", d: "One size", p: 50 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
 ];
 
@@ -83,7 +82,10 @@ export default function Home() {
   const [postal, setPostal] = useState("");
   const [shipOptions, setShipOptions] = useState([]);
   const [selShip, setSelShip] = useState(null);
-  const [calcLoading, setCalcLoading] = useState(false);
+const [calcLoading, setCalcLoading] = useState(false);
+const [flowerMode, setFlowerMode] = useState(null);
+const [selFlowers, setSelFlowers] = useState([]);
+const [flowerColors, setFlowerColors] = useState({});
 
   const showToast = (msg) => {
     setToast(msg);
@@ -96,9 +98,8 @@ export default function Home() {
 
   const openProduct = (p) => {
     setProduct(p); setSelSize(0); setSelFlavor(0); setSelQty(p.min || 1); setSelMsg("");
-    setPage("product"); window.scrollTo(0, 0);
-  };
-
+setPage("product"); window.scrollTo(0, 0);setFlowerMode(null); setSelFlowers([]); setFlowerColors({});
+};
   const priceRange = (p) => {
     const prices = p.sizes.map((s) => s.p);
     const min = Math.min(...prices), max = Math.max(...prices);
@@ -109,7 +110,8 @@ export default function Home() {
     const p = product;
     setCart([...cart, {
       id: p.id, name: p.name, size: p.sizes[selSize].n, flavor: p.flavors[selFlavor],
-      price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
+price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
+      flowers: p.flowerTypes ? selFlowers.map(f => `${f} (${flowerColors[f]||'?'})`).join(', ') : null,
     }]);
     showToast("Added to cart ✓");
     setCartOpen(true);
@@ -192,7 +194,7 @@ export default function Home() {
     <div className={styles.productCard} onClick={() => openProduct(p)}>
       <div className={styles.productImg} style={{ background: p.color }}>
         {p.badge && <span className={styles.productBadge}>{p.badge}</span>}
-        <Flower type={p.flower} size={90} />
+        {p.image ? <img src={p.image} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} /> : <Flower type={p.flower} size={90} />}
       </div>
       <div className={styles.productBody}>
         <div className={styles.productCat}>{p.cat}</div>
@@ -244,7 +246,7 @@ export default function Home() {
             </div>
             <div className={styles.heroVisual}>
               <div className={styles.heroBadge}>Handmade to order</div>
-              <img src="/hero.jpg" alt="Zefir Canada marshmallow bouquet gift boxes" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px" }} />
+              <img src="/hero.jpg" alt="Zefir Canada marshmallow bouquet gift boxes" style={{ width: "100%", height: "100%", objectFit: "fill", borderRadius: "12px" }} />
               <div className={styles.heroTag}>Looks real. Tastes magical.</div>
             </div>
           </section>
@@ -357,7 +359,7 @@ export default function Home() {
       {page === "product" && product && (
         <section>
           <div className={styles.pdp}>
-            <div className={styles.pdpImg} style={{ background: product.color }}><Flower type={product.flower} size={180} /></div>
+            <div className={styles.pdpImg} style={{ background: product.color }}>{product.image ? <img src={product.image} alt={product.name} style={{width:"100%",height:"100%",objectFit:"cover",display:"block",borderRadius:"inherit"}} /> : <Flower type={product.flower} size={180} />}</div>
             <div>
               <div className={styles.pdpBreadcrumb}><span onClick={() => goShop(product.cat)} style={{ cursor: "pointer" }}>{product.cat}</span> / {product.name}</div>
               <div className={`${styles.pdpName} ${styles.serif}`}>{product.name}</div>
@@ -386,8 +388,40 @@ export default function Home() {
                 ))}
               </div>
 
-              {product.card && (
-                <>
+{product.flowerTypes && (<>
+  <div className={styles.pdpLabel}>Flower arrangement</div>
+  <div className={styles.optRow}>
+    <button className={`${styles.optBtn} ${flowerMode==="single"?styles.optActive:""}`} onClick={()=>{setFlowerMode("single");setSelFlowers([]);setFlowerColors({});}}>One type</button>
+    <button className={`${styles.optBtn} ${flowerMode==="mix"?styles.optActive:""}`} onClick={()=>{setFlowerMode("mix");setSelFlowers([]);setFlowerColors({});}}>Mix</button>
+  </div>
+  {flowerMode&&(<>
+    <div className={styles.pdpLabel}>{flowerMode==="mix"?`Select up to 3 flowers (${selFlowers.length}/3)`:"Select flower"}</div>
+    <div className={styles.optRow} style={{flexWrap:"wrap"}}>
+      {product.flowerTypes.map((f)=>{
+        const sel=selFlowers.includes(f);
+        const maxed=flowerMode==="mix"&&selFlowers.length>=3&&!sel;
+        return(<button key={f} disabled={maxed} style={maxed?{opacity:0.4}:{}} className={`${styles.optBtn} ${sel?styles.optActive:""}`}
+          onClick={()=>{
+            if(flowerMode==="single"){setSelFlowers([f]);setFlowerColors({});}
+            else{if(sel){const nf=selFlowers.filter(x=>x!==f);const nc={...flowerColors};delete nc[f];setSelFlowers(nf);setFlowerColors(nc);}
+            else if(selFlowers.length<3){setSelFlowers([...selFlowers,f]);}}
+          }}>{f}</button>);
+      })}
+    </div>
+    {(()=>{const pending=selFlowers.find(f=>!flowerColors[f]);if(!pending)return null;return(<>
+      <div className={styles.pdpLabel}>Color for {pending}</div>
+      <div className={styles.optRow} style={{flexWrap:"wrap"}}>
+        {["White","Yellow","Pink","Purple","Orange","Blue","Red"].map((c)=>(
+          <button key={c} className={`${styles.optBtn} ${flowerColors[pending]===c?styles.optActive:""}`}
+            onClick={()=>setFlowerColors({...flowerColors,[pending]:c})}>{c}</button>
+        ))}
+      </div>
+    </>);})()}
+  </>)}
+</>)}
+
+{product.card && (
+                 <>
                   <div className={styles.pdpLabel}>Add a personal message (optional)</div>
                   <textarea className={styles.msgField} placeholder="E.g. Happy Birthday! ❤️" value={selMsg} onChange={(e) => setSelMsg(e.target.value)} />
                 </>
@@ -404,13 +438,12 @@ export default function Home() {
                 </div>
               </div>
 
-              <button className={styles.pdpAdd} onClick={addToCart}>Add to Cart — ${product.sizes[selSize].p * selQty} CAD</button>
+<button className={styles.pdpAdd} onClick={addToCart} disabled={product.flowerTypes&&(flowerMode==="mix"?(selFlowers.length<2||Object.keys(flowerColors).length<selFlowers.length):(selFlowers.length===0||Object.keys(flowerColors).length<selFlowers.length))} style={product.flowerTypes&&(flowerMode==="mix"?(selFlowers.length<2||Object.keys(flowerColors).length<selFlowers.length):(selFlowers.length===0||Object.keys(flowerColors).length<selFlowers.length))?{opacity:0.4,cursor:'not-allowed'}:{}}>Add to Cart</button>
               <div className={styles.pdpTrust}>✓ Handmade fresh to order · 3 days before delivery<br />✓ Local delivery, pickup &amp; Canada-wide shipping<br />✓ Gift-ready packaging included</div>
             </div>
           </div>
         </section>
       )}
-
       {/* ABOUT */}
       {page === "about" && (
         <section>
@@ -440,7 +473,8 @@ export default function Home() {
                 <div className={styles.cartLineInfo}>
                   <div className={styles.cartLineName}>{it.name}</div>
                   <div className={styles.cartLineOpts}>{it.size} · {it.flavor}</div>
-                  {it.msg && <div className={styles.cartLineMsg}>💌 &quot;{it.msg}&quot;</div>}
+{it.flowers && <div className={styles.cartLineOpts}>🌸 {it.flowers}</div>}
+{it.msg && <div className={styles.cartLineMsg}>💌 &quot;{it.msg}&quot;</div>}
                   <div className={styles.cartLineBottom}>
                     <div className={styles.cartLineQty}>
                       <button onClick={() => changeQty(idx, -1)}>−</button>
