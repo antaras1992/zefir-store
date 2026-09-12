@@ -109,10 +109,11 @@ export async function POST(request) {
     const weightKg = Math.max(0.1, Math.round(totalWeight * 1000) / 1000);
 
     const options = [];
-    options.push({ id: "pickup", name: "Pickup in Leduc", price: 0, eta: "Ready in 3 days" });
-
     const isLocal = LOCAL_PREFIXES.some((p) => prefix2 === p || prefix3 === p);
+
+    // Pickup in Leduc only for local area (Edmonton/Leduc ~100km radius)
     if (isLocal) {
+      options.push({ id: "pickup", name: "Pickup in Leduc", price: 0, eta: "Ready in 3 days" });
       options.push({
         id: "local",
         name: "Local Delivery (Edmonton & Leduc)",
