@@ -597,14 +597,14 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
             {/* Shipping calculator */}
             <div style={{ margin: "14px 0", paddingTop: "12px", borderTop: "1px solid #E8E5DF" }}>
               <div style={{ fontSize: "12px", fontWeight: 600, marginBottom: "8px", color: "#1C1A18" }}>Shipping</div>
-              <div style={{ display: "flex", gap: "8px", marginBottom: "10px" }}>
+              <div style={{ display: "flex", gap: "8px", marginBottom: "10px", flexWrap: "nowrap" }}>
                 <input
                   type="text"
                   placeholder="Postal code (e.g. T5J 0N3)"
                   value={postal}
                   onChange={(e) => { setPostal(e.target.value); setShipOptions([]); setSelShip(null); }}
                   onKeyDown={(e) => e.key==="Enter" && calcShipping()}
-                  style={{ flex: 1, border: "1px solid #E8E5DF", borderRadius: "6px", padding: "10px 12px", fontSize: "13px", fontFamily: "'Inter',sans-serif", outline: "none" }}
+                  style={{ flex: 1, minWidth: 0, border: "1px solid #E8E5DF", borderRadius: "6px", padding: "10px 10px", fontSize: "13px", fontFamily: "'Inter',sans-serif", outline: "none" }}
                 />
                 <button
                   onClick={calcShipping}
@@ -678,7 +678,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                 return (
                   <div style={{marginTop:"8px"}}>
                     <label style={{display:"block",fontSize:"13px",fontWeight:600,color:"#555",marginBottom:"10px"}}>📅 When do you need it?</label>
-                    <div style={{background:"#fff",borderRadius:"14px",border:"1.5px solid #e8c8ca",overflow:"hidden",boxShadow:"0 2px 12px rgba(200,115,122,0.1)"}}>
+                    <div style={{background:"#fff",borderRadius:"14px",border:"1.5px solid #e8c8ca",overflow:"hidden",boxShadow:"0 2px 12px rgba(200,115,122,0.1)",width:"100%",boxSizing:"border-box"}}>
                       {/* Header */}
                       <div style={{background:"linear-gradient(135deg,#c8737a,#e8909a)",padding:"14px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                         <button onClick={prevMonth} disabled={canGoPrev()} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:"8px",width:"40px",height:"40px",color:"#fff",fontSize:"20px",cursor:canGoPrev()?"not-allowed":"pointer",opacity:canGoPrev()?0.4:1}}>‹</button>
@@ -686,11 +686,11 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                         <button onClick={nextMonth} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:"8px",width:"40px",height:"40px",color:"#fff",fontSize:"20px",cursor:"pointer"}}>›</button>
                       </div>
                       {/* Day names */}
-                      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",padding:"10px 12px 4px",gap:"2px"}}>
+                      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",padding:"10px 4px 4px",gap:"1px"}}>
                         {DAYS.map(d=><div key={d} style={{textAlign:"center",fontSize:"11px",fontWeight:700,color:"#c8737a",padding:"4px 0"}}>{d}</div>)}
                       </div>
                       {/* Days grid */}
-                      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",padding:"0 8px 12px",gap:"2px"}}>
+                      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",padding:"0 4px 12px",gap:"1px"}}>
                         {cells.map((d,i)=> d===null
                           ? <div key={"e"+i}/>
                           : <button key={d} onClick={()=>pickDay(d)} disabled={isDisabled(d)} style={{
