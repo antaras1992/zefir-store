@@ -6,7 +6,7 @@ const WEIGHTS = {
   "tulip-bouquet": 0.7, "mixed-bouquet": 0.7, "single-tulip": 0.1, "flower-basket": 0.8,
 };
 
-const LOCAL_PREFIXES = ["T5", "T6", "T9E", "T8"];
+const LOCAL_PREFIXES = ["T5", "T6", "T7", "T8", "T9E", "T9S", "T9G", "T4X"];
 
 const ZONE_BY_LETTER = {
   T: 1, S: 1, R: 1, V: 2, P: 2, N: 2, L: 2, K: 2, M: 2,
