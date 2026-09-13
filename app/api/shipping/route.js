@@ -117,7 +117,7 @@ export async function POST(request) {
       options.push({
         id: "local",
         name: "Local Delivery (Edmonton & Leduc)",
-        price: subtotal >= 90 ? 0 : 25,
+        price: subtotal >= 100 ? 0 : 25,
         eta: "Within 3 days",
       });
       return Response.json({ options, weight: weightKg, source: "local" });
