@@ -726,6 +726,13 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
             <a onClick={() => goShop("extras")}>Extras</a>
           </div>
           <div className={styles.footerCol}>
+            <h5>Our Products</h5>
+            {PRODUCTS.map((p) => (
+              <a key={p.id} href={`/products/${p.id}`}>{p.name}</a>
+            ))}
+            <a href="/gallery">Gallery</a>
+          </div>
+          <div className={styles.footerCol}>
             <h5>Info</h5>
             <a onClick={goAbout}>About Us</a>
             <a onClick={() => setInfoModal("shipping")} style={{cursor:"pointer"}}>Shipping</a>
