@@ -10,6 +10,16 @@ export async function POST(request) {
       return Response.json({ error: "Cart is empty" }, { status: 400 });
     }
 
+    // Bouquets & baskets — only local delivery or pickup
+    const LOCAL_ONLY_IDS = ["tulip-bouquet", "mixed-bouquet", "flower-basket"];
+    const hasLocalOnly = items.some((i) => LOCAL_ONLY_IDS.includes(i.id));
+    if (hasLocalOnly && (!shipping || !["pickup", "local"].includes(shipping.id))) {
+      return Response.json(
+        { error: "Bouquets and baskets are available only for local delivery (Edmonton & Leduc) or pickup" },
+        { status: 400 }
+      );
+    }
+
     const line_items = items.map((item) => {
     if (item.id === "greeting-card") {
       return {

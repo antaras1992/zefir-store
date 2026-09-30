@@ -8,6 +8,9 @@ const WEIGHTS = {
 
 const LOCAL_PREFIXES = ["T5", "T6", "T9E", "T9G", "T9S", "T4X"];
 
+// Bouquets & baskets — local delivery / pickup only (not shipped Canada-wide)
+const LOCAL_ONLY_IDS = ["tulip-bouquet", "mixed-bouquet", "flower-basket"];
+
 const ZONE_BY_LETTER = {
   T: 1, S: 1, R: 1, V: 2, P: 2, N: 2, L: 2, K: 2, M: 2,
   H: 3, J: 3, G: 3, E: 3, B: 3, C: 3, A: 3, X: 3, Y: 3,
@@ -125,6 +128,18 @@ export async function POST(request) {
         eta: "Within 3 days",
       });
       return Response.json({ options, weight: weightKg, source: "local" });
+    }
+
+    // Bouquets & baskets can't be shipped outside the local area
+    const localOnly = items.filter((i) => LOCAL_ONLY_IDS.includes(i.id));
+    if (localOnly.length > 0) {
+      const names = [...new Set(localOnly.map((i) => i.name))].join(", ");
+      return Response.json(
+        {
+          error: `${names}: available only for local delivery in Edmonton & Leduc or pickup in Leduc. Remove from cart to ship across Canada.`,
+        },
+        { status: 400 }
+      );
     }
 
     // Try Canada Post real rates

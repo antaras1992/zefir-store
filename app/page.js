@@ -540,7 +540,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
               </div>
 
 <button className={styles.pdpAdd} onClick={addToCart} disabled={product.flowerTypes&&(flowerMode==="mix"?(selFlowers.length<2||Object.keys(flowerColors).length<selFlowers.length):(selFlowers.length===0||Object.keys(flowerColors).length<selFlowers.length))} style={product.flowerTypes&&(flowerMode==="mix"?(selFlowers.length<2||Object.keys(flowerColors).length<selFlowers.length):(selFlowers.length===0||Object.keys(flowerColors).length<selFlowers.length))?{opacity:0.4,cursor:'not-allowed'}:{}}>Add to Cart</button>
-              <div className={styles.pdpTrust}>✓ Handmade fresh to order · 3 days before delivery<br />✓ Local delivery, pickup &amp; Canada-wide shipping<br />✓ Gift-ready packaging included</div>
+              <div className={styles.pdpTrust}>✓ Handmade fresh to order · 3 days before delivery<br />{["tulip-bouquet","mixed-bouquet","flower-basket"].includes(product.id) ? "✓ Local delivery (Edmonton & Leduc) or pickup only" : "✓ Local delivery, pickup & Canada-wide shipping"}<br />✓ Gift-ready packaging included</div>
             </div>
           </div>
         </section>
@@ -759,7 +759,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
               <div className={styles.infoIcon}>🚚</div>
               <h2 className={styles.infoTitle}>Shipping &amp; Delivery</h2>
               <div className={styles.infoList}>
-                {["Free local delivery on orders $100+","Leduc area delivery — always free","Canada-wide shipping via Canada Post","Orders ship within 3 business days","Free pickup available in Leduc for local orders"].map((t,i) => (
+                {["Free local delivery on orders $100+","Leduc area delivery — always free","Canada-wide shipping via Canada Post (tulip boxes & single tulips)","Bouquets & baskets — local delivery or pickup only","Orders ship within 3 business days","Free pickup available in Leduc for local orders"].map((t,i) => (
                   <div key={i} className={styles.infoItem}><span className={styles.infoCheck}>✓</span><div>{t}</div></div>
                 ))}
               </div>
