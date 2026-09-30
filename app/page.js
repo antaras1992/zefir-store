@@ -654,7 +654,9 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                 const isLocal = selShip.id === "pickup" || selShip.id === "local" || (selShip.price === 0 && (etaText.toLowerCase().includes("pickup") || etaText.toLowerCase().includes("leduc") || etaText.toLowerCase().includes("edmonton") || etaText.toLowerCase().includes("ready") || etaText.toLowerCase().includes("within")));
                 const nums = etaText.match(/\d+/g);
                 const etaDays = isLocal ? 0 : (nums ? Math.max(...nums.map(Number)) : 7);
-                const minDays = 3 + etaDays;
+                // Local (Edmonton/Leduc delivery or pickup): 3 days handcrafting.
+                // Canada Post: 5 days (handcrafting + buffer) + transit days.
+                const minDays = isLocal ? 3 : 5 + etaDays;
                 const minDateObj = new Date(Date.now() + minDays * 86400000);
                 minDateObj.setHours(0,0,0,0);
                 const selDateObj = deliveryDate ? new Date(deliveryDate + "T00:00:00") : null;
@@ -708,9 +710,13 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                       </div>}
                     </div>
                     {!deliveryDate && <p style={{color:"#c8737a",fontSize:"12px",margin:"6px 0 0"}}>Please select a delivery date</p>}
-                    <div style={{marginTop:"10px",padding:"10px 12px",background:"#fff8e7",borderRadius:"8px",border:"1px solid #f0d080",fontSize:"12px",color:"#7a6000",lineHeight:"1.5"}}>
-                      ⚠️ Canada Post occasionally delays long-distance shipments. We recommend ordering with extra time — your bouquet deserves to arrive on time! 🌸
-                    </div>
+                    {!isLocal && (
+                      <div style={{marginTop:"10px",padding:"10px 12px",background:"#fff8e7",borderRadius:"8px",border:"1px solid #f0d080",fontSize:"12px",color:"#7a6000",lineHeight:"1.5"}}>
+                        🎂 <b>Ordering for a birthday or special date?</b><br />
+                        We ship early so your gift arrives <b>on or before</b> the date you choose. It may arrive 1–3 days early — our marshmallow bouquets stay fresh up to 3 weeks, so it&apos;s perfect to keep until the big day.<br />
+                        Canada Post delivery times are estimates and delays are outside our control. Please order with extra time.
+                      </div>
+                    )}
                   </div>
                 );
               })()}
