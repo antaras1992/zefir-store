@@ -657,8 +657,17 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                 // Local (Edmonton/Leduc delivery or pickup): 3 days handcrafting.
                 // Canada Post: 5 days (handcrafting + buffer) + transit days.
                 const minDays = isLocal ? 3 : 5 + etaDays;
-                const minDateObj = new Date(Date.now() + minDays * 86400000);
+                // Canada Post: count business days only (skip weekends & stat holidays)
+                const HOLIDAYS = ["2026-10-12","2026-11-11","2026-12-25","2026-12-28","2027-01-01","2027-03-26","2027-05-24","2027-07-01","2027-09-06","2027-10-11","2027-11-11","2027-12-27","2027-12-28"];
+                const isBizDay = (d) => { const wd = d.getDay(); const iso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; return wd !== 0 && wd !== 6 && !HOLIDAYS.includes(iso); };
+                const minDateObj = new Date();
                 minDateObj.setHours(0,0,0,0);
+                if (isLocal) {
+                  minDateObj.setDate(minDateObj.getDate() + minDays);
+                } else {
+                  let added = 0;
+                  while (added < minDays) { minDateObj.setDate(minDateObj.getDate() + 1); if (isBizDay(minDateObj)) added++; }
+                }
                 const selDateObj = deliveryDate ? new Date(deliveryDate + "T00:00:00") : null;
                 const calYear = selDateObj ? selDateObj.getFullYear() : minDateObj.getFullYear();
                 const calMonth = selDateObj ? selDateObj.getMonth() : minDateObj.getMonth();
