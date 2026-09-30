@@ -655,8 +655,8 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                 const nums = etaText.match(/\d+/g);
                 const etaDays = isLocal ? 0 : (nums ? Math.max(...nums.map(Number)) : 7);
                 // Local (Edmonton/Leduc delivery or pickup): 3 days handcrafting.
-                // Canada Post: 5 days (handcrafting + buffer) + transit days.
-                const minDays = isLocal ? 3 : 5 + etaDays;
+                // Canada Post: 3 business days (handcrafting) + transit business days.
+                const minDays = isLocal ? 3 : 3 + etaDays;
                 // Canada Post: count business days only (skip weekends & stat holidays)
                 const HOLIDAYS = ["2026-10-12","2026-11-11","2026-12-25","2026-12-28","2027-01-01","2027-03-26","2027-05-24","2027-07-01","2027-09-06","2027-10-11","2027-11-11","2027-12-27","2027-12-28"];
                 const isBizDay = (d) => { const wd = d.getDay(); const iso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; return wd !== 0 && wd !== 6 && !HOLIDAYS.includes(iso); };
