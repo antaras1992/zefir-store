@@ -3,42 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import styles from "./page.module.css";
 
-// ============ PRODUCT DATA ============
-const PRODUCTS = [
-  { id: "tulip-bouquet", cat: "bouquets", name: "Tulip Bouquet", badge: "Bestseller", featured: true,
-    desc: "Hand-piped marshmallow tulips arranged into a beautiful edible bouquet. Made fresh to order in our Edmonton kitchen.",
-  color: "#FBEAF0", flower: "tulip", selectColor: true, image: "/tulip-bouquet.jpg",
-    sizes: [{ n: "S", d: "~15 cm", p: 50 }, { n: "M", d: "~20 cm", p: 70 }, { n: "L", d: "~30 cm", p: 90 }],
-    flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
-  { id: "mixed-bouquet", cat: "bouquets", name: "Mixed Flower Bouquet", badge: "Premium", featured: true,
-    desc: "A stunning mix of marshmallow flowers in different shapes and colors. Our most impressive arrangement.",
-   color: "#FAECE7", flower: "mixed", image: "/mixed-bouquet.jpg", flowerTypes: ["Tulip","Peony","Rose","Ranunculus","Hydrangea","Dahlia","Chrysanthemum"],
-    sizes: [{ n: "S", d: "~15 cm", p: 70 }, { n: "M", d: "~20 cm", p: 90 }, { n: "L", d: "~30 cm", p: 120 }],
-    flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
-  { id: "tulip-box-4", cat: "boxes", name: "Tulip Box — 4 pieces", badge: "Min. 4 boxes", featured: false,
-color: "#F5F0FC", flower: "box", selectColor: true, image: "/tulip-box-4.jpg",
-      sizes: [{ n: "Clear box", d: "4 pieces", p: 12 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true, min: 4 },
-    { id: "tulip-box-10", cat: "boxes", name: "Tulip Box — 10 pieces", badge: "", featured: true,
-    desc: "Ten marshmallow tulips beautifully arranged in a clear gift box.",
-    color: "#FBEAF0", flower: "box", selectColor: true, image: "/tulip-box-10.jpg",
-    sizes: [{ n: "Clear box", d: "10 pieces", p: 35 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
-  { id: "tulip-box-12", cat: "boxes", name: "Tulip Box — 12 pieces", badge: "", featured: false,
-    desc: "A dozen marshmallow tulips in an elegant white gift box.",
-    color: "#FAFAF8", flower: "box", selectColor: true, image: "/tulip-box-12.jpg",
-    sizes: [{ n: "White box", d: "12 pieces", p: 35 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
-  { id: "tulip-box-20", cat: "boxes", name: "Tulip Box — 20 pieces", badge: "Best value", featured: false,
-    desc: "Twenty marshmallow tulips — a generous gift box for someone special.",
-    color: "#FAECE7", flower: "box", selectColor: true, image: "/tulip-box-20.jpg",
-    sizes: [{ n: "Gift box", d: "20 pieces", p: 50 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
-  { id: "single-tulip", cat: "extras", name: "Individual Tulip Flower", badge: "", featured: false,
-    desc: "A single marshmallow tulip in its own packaging. Great as a favour or add-on.",
-    color: "#F5F0FC", flower: "single", selectColor: true, image: "/single-tulip.jpg",
-    sizes: [{ n: "Single", d: "1 flower", p: 3 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: false },
-  { id: "flower-basket", cat: "extras", name: "Flower Basket", badge: "", featured: false,
-    desc: "Marshmallow flowers arranged in a charming basket. A unique gift that stands out.",
-    color: "#FBEAF0", flower: "basket", flowerTypes: ["Tulip","Peony","Rose","Ranunculus","Hydrangea","Dahlia","Chrysanthemum"], image: "/flower-basket.jpg",
-    sizes: [{ n: "Basket", d: "One size", p: 50 }], flavors: ["Strawberry", "Apple", "Vanilla"], card: true },
-];
+import { PRODUCTS } from "@/lib/products";
 
 // ============ FLOWER SVG ============
 function Flower({ type, size = 100 }) {
@@ -128,6 +93,16 @@ const [flowerColors, setFlowerColors] = useState({});
 setPage("product"); window.scrollTo(0, 0);setFlowerMode(null); setSelFlowers([]); setFlowerColors({}); setSelColor(null);
     setAddCard(false); setPendingColor(null); setAddCard(false);
 };
+
+  // Open a product directly from a link like /?product=tulip-box-12 (used by SEO product pages)
+  useEffect(() => {
+    try {
+      const id = new URLSearchParams(window.location.search).get("product");
+      const p = id && PRODUCTS.find((x) => x.id === id);
+      if (p) openProduct(p);
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const priceRange = (p) => {
     const prices = p.sizes.map((s) => s.p);
     const min = Math.min(...prices), max = Math.max(...prices);
