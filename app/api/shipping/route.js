@@ -100,6 +100,10 @@ export async function POST(request) {
     if (!postalCode) return Response.json({ error: "Postal code required" }, { status: 400 });
 
     const dest = postalCode.replace(/\s+/g, "").toUpperCase();
+    // Block non-Canadian postal codes (US ZIP codes start with digits)
+    if (!/^[A-Za-z]\d/.test(dest)) {
+      return Response.json({ error: "Sorry, we only deliver within Canada 🇨🇦" }, { status: 400 });
+    }
     const prefix2 = dest.slice(0, 2);
     const prefix3 = dest.slice(0, 3);
     const firstLetter = dest.slice(0, 1);
