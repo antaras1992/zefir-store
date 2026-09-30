@@ -515,7 +515,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
               </div>
 
 <button className={styles.pdpAdd} onClick={addToCart} disabled={product.flowerTypes&&(flowerMode==="mix"?(selFlowers.length<2||Object.keys(flowerColors).length<selFlowers.length):(selFlowers.length===0||Object.keys(flowerColors).length<selFlowers.length))} style={product.flowerTypes&&(flowerMode==="mix"?(selFlowers.length<2||Object.keys(flowerColors).length<selFlowers.length):(selFlowers.length===0||Object.keys(flowerColors).length<selFlowers.length))?{opacity:0.4,cursor:'not-allowed'}:{}}>Add to Cart</button>
-              <div className={styles.pdpTrust}>✓ Handmade fresh to order · 3 days before delivery<br />{["tulip-bouquet","mixed-bouquet","flower-basket"].includes(product.id) ? "✓ Local delivery (Edmonton & Leduc) or pickup only" : "✓ Local delivery, pickup & Canada-wide shipping"}<br />✓ Gift-ready packaging included</div>
+              <div className={styles.pdpTrust}>✓ Handmade fresh to order · 3 days before delivery<br />{["tulip-bouquet","mixed-bouquet","flower-basket"].includes(product.id) ? "✓ Local delivery (Edmonton & Leduc) or pickup only" : "✓ Local delivery, pickup & Canada-wide shipping"}<br />✓ Gift-ready packaging included<br />🎨 Want custom colours or size? <a href="/custom-orders" style={{ color: "#D4537E", textDecoration: "underline" }}>Custom orders via Instagram</a></div>
             </div>
           </div>
         </section>
@@ -734,9 +734,10 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
           </div>
           <div className={styles.footerCol}>
             <h5>Info</h5>
-            <a onClick={goAbout}>About Us</a>
-            <a onClick={() => setInfoModal("shipping")} style={{cursor:"pointer"}}>Shipping</a>
-            <a onClick={() => setInfoModal("faq")} style={{cursor:"pointer"}}>FAQ</a>
+            <a href="/about">About Us</a>
+            <a href="/custom-orders">Custom Orders</a>
+            <a href="/shipping">Shipping</a>
+            <a href="/faq">FAQ &amp; Ingredients</a>
             <a onClick={() => setInfoModal("contact")} style={{cursor:"pointer"}}>Contact</a>
           </div>
         </div>
