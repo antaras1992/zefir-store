@@ -120,11 +120,13 @@ export async function POST(request) {
 
     // Pickup in Leduc only for local area (Edmonton/Leduc ~100km radius)
     if (isLocal) {
+      // Leduc (T9E) — delivery always free; Edmonton & area — free from $100, otherwise $25
+      const isLeduc = prefix3 === "T9E";
       options.push({ id: "pickup", name: "Pickup in Leduc", price: 0, eta: "Ready in 3 days" });
       options.push({
         id: "local",
-        name: "Local Delivery (Edmonton & Leduc)",
-        price: subtotal >= 100 ? 0 : 25,
+        name: isLeduc ? "Local Delivery (Leduc)" : "Local Delivery (Edmonton & area)",
+        price: isLeduc || subtotal >= 100 ? 0 : 25,
         eta: "Within 3 days",
       });
       return Response.json({ options, weight: weightKg, source: "local" });

@@ -12,7 +12,8 @@ export default function ShippingPage() {
     <InfoPage eyebrow="Delivery" title="Shipping & delivery">
       <H2>Edmonton & Leduc area</H2>
       <List items={[
-        "Local delivery in Edmonton & Leduc area — free on orders $100+",
+        "Delivery in Leduc — always free",
+        "Delivery in Edmonton & area — $25, free on orders $100+",
         "Free pickup in Leduc",
         "Local delivery available 7 days a week",
         "Please allow 3 days for handcrafting",

@@ -757,7 +757,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
               <div className={styles.infoIcon}>🚚</div>
               <h2 className={styles.infoTitle}>Shipping &amp; Delivery</h2>
               <div className={styles.infoList}>
-                {["Free local delivery on orders $100+","Leduc area delivery — always free","Canada-wide shipping via Canada Post (tulip boxes & single tulips)","Bouquets & baskets — local delivery or pickup only","Orders ship within 3 business days","Free pickup available in Leduc for local orders"].map((t,i) => (
+                {["Leduc delivery — always free","Edmonton & area delivery — $25, free on orders $100+","Canada-wide shipping via Canada Post (tulip boxes & single tulips)","Bouquets & baskets — local delivery or pickup only","Orders ship within 3 business days","Free pickup available in Leduc for local orders"].map((t,i) => (
                   <div key={i} className={styles.infoItem}><span className={styles.infoCheck}>✓</span><div>{t}</div></div>
                 ))}
               </div>
