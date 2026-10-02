@@ -10,6 +10,15 @@ export async function POST(request) {
       return Response.json({ error: "Cart is empty" }, { status: 400 });
     }
 
+    // Minimum quantities (must match lib/products.js)
+    const MIN_QTY = { "single-tulip": 20, "tulip-box-4": 4 };
+    for (const [id, min] of Object.entries(MIN_QTY)) {
+      const qty = items.filter((i) => i.id === id).reduce((s, i) => s + (i.qty || 0), 0);
+      if (qty > 0 && qty < min) {
+        return Response.json({ error: `Minimum order for this item is ${min}` }, { status: 400 });
+      }
+    }
+
     // Bouquets & baskets — only local delivery or pickup
     const LOCAL_ONLY_IDS = ["tulip-bouquet", "mixed-bouquet", "flower-basket"];
     const hasLocalOnly = items.some((i) => LOCAL_ONLY_IDS.includes(i.id));
