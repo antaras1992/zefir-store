@@ -1,20 +1,21 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
 import { getSetting, setSetting } from '@/lib/instagram';
+import { HIDDEN_PHOTO_IDS } from '@/lib/galleryHidden';
 
 export const dynamic = 'force-dynamic';
 
 // Permanent design numbers: each photo gets the next number once and keeps it forever
 async function withNumbers(photos) {
   try {
-    const map = (await getSetting('gallery_numbers')) || { next: 1, ids: {} };
+    const map = (await getSetting('gallery_numbers_v2')) || { next: 1, ids: {} };
     let changed = false;
-    const oldestFirst = [...photos].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    const oldestFirst = photos.filter((p) => !HIDDEN_PHOTO_IDS.has(p.id)).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
     for (const p of oldestFirst) {
       if (!map.ids[p.id]) { map.ids[p.id] = map.next++; changed = true; }
     }
-    if (changed) await setSetting('gallery_numbers', map);
-    return photos.map((p) => ({ ...p, number: map.ids[p.id] }));
+    if (changed) await setSetting('gallery_numbers_v2', map);
+    return photos.map((p) => ({ ...p, number: map.ids[p.id], hidden: HIDDEN_PHOTO_IDS.has(p.id) }));
   } catch (e) {
     console.error('gallery numbers:', e);
     return photos;
@@ -24,14 +25,16 @@ async function withNumbers(photos) {
 const ADMIN_PASSWORD = process.env.GALLERY_ADMIN_PASSWORD;
 
 // GET - public, fetch all photos
-export async function GET() {
+export async function GET(req) {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from('gallery_photos')
     .select('*')
     .order('created_at', { ascending: false });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ photos: await withNumbers(data || []) });
+  const all = new URL(req.url).searchParams.get('all') === '1'; // admin sees hidden photos too
+  const photos = await withNumbers(data || []);
+  return NextResponse.json({ photos: all ? photos : photos.filter((p) => !p.hidden) });
 }
 
 // POST - upload photo (admin only)
