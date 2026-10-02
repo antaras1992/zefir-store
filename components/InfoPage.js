@@ -9,6 +9,8 @@ const NAV = [
   { href: "/shipping", label: "Shipping" },
   { href: "/faq", label: "FAQ" },
   { href: "/gallery", label: "Gallery" },
+  { href: "/marshmallow-bouquets-edmonton", label: "Edmonton" },
+  { href: "/marshmallow-bouquets-leduc", label: "Leduc" },
 ];
 
 export function H2({ children }) {

@@ -5,7 +5,7 @@ export default function sitemap() {
   return [
     { url: `${SITE_URL}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: `${SITE_URL}/gallery`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    ...["about", "custom-orders", "shipping", "faq"].map((path) => ({
+    ...["about", "custom-orders", "shipping", "faq", "marshmallow-bouquets-edmonton", "marshmallow-bouquets-leduc"].map((path) => ({
       url: `${SITE_URL}/${path}`,
       lastModified: now,
       changeFrequency: "monthly",

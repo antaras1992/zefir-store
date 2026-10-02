@@ -738,6 +738,8 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
             <a href="/custom-orders">Custom Orders</a>
             <a href="/shipping">Shipping</a>
             <a href="/faq">FAQ &amp; Ingredients</a>
+            <a href="/marshmallow-bouquets-edmonton">Edmonton delivery</a>
+            <a href="/marshmallow-bouquets-leduc">Leduc delivery</a>
             <a onClick={() => setInfoModal("contact")} style={{cursor:"pointer"}}>Contact</a>
           </div>
         </div>

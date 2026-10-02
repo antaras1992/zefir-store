@@ -46,10 +46,14 @@ export default function AdminPage() {
     setLoading(false);
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // We'll verify on server when uploading; for now just store password
     if (password.length < 3) { setAuthError('Enter password'); return; }
+    setAuthError('');
+    try {
+      const r = await fetch('/api/admin/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) });
+      if (!r.ok) { setAuthError('Wrong password'); return; }
+    } catch { setAuthError('Network error, try again'); return; }
     setAuthenticated(true);
     fetchPhotos();
   };
