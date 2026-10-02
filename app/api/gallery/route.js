@@ -8,13 +8,13 @@ export const dynamic = 'force-dynamic';
 // Permanent design numbers: each photo gets the next number once and keeps it forever
 async function withNumbers(photos) {
   try {
-    const map = (await getSetting('gallery_numbers_v2')) || { next: 1, ids: {} };
+    const map = (await getSetting('gallery_numbers_v3')) || { next: 1, ids: {} };
     let changed = false;
     const oldestFirst = photos.filter((p) => !HIDDEN_PHOTO_IDS.has(p.id)).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
     for (const p of oldestFirst) {
       if (!map.ids[p.id]) { map.ids[p.id] = map.next++; changed = true; }
     }
-    if (changed) await setSetting('gallery_numbers_v2', map);
+    if (changed) await setSetting('gallery_numbers_v3', map);
     return photos.map((p) => ({ ...p, number: map.ids[p.id], hidden: HIDDEN_PHOTO_IDS.has(p.id) }));
   } catch (e) {
     console.error('gallery numbers:', e);
