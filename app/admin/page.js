@@ -34,6 +34,11 @@ export default function AdminPage() {
     const d = await r.json();
     showToast(d.ok ? 'Status saved' : (d.error || 'Error'));
   };
+  const setupWebhook = async () => {
+    const r = await fetch('/api/admin/setup-webhook', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) });
+    const d = await r.json();
+    showToast(d.ok ? (d.already ? 'Stripe webhook already connected ✓' : 'Stripe webhook connected ✓') : `Error: ${d.error}`);
+  };
   const statusColor = (s) => ({ new: '#e55', 'in progress': '#d98b00', ready: '#2a7', shipped: '#2a6fdb', delivered: '#888', cancelled: '#aaa' }[s] || '#555');
   const [igStatus, setIgStatus] = useState('');
   const [igSyncing, setIgSyncing] = useState(false);
@@ -158,7 +163,10 @@ export default function AdminPage() {
         <div style={{ background: '#fff', borderRadius: 16, padding: 28, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: 24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
             <h2 style={{ margin: 0, color: '#2d1b1e', fontSize: 18 }}>📦 Orders ({orders.length})</h2>
-            <button onClick={() => fetchOrders()} style={{ background: 'none', border: '1px solid #ddd', borderRadius: 6, padding: '6px 12px', cursor: 'pointer', fontSize: 13 }}>↻ Refresh</button>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button onClick={setupWebhook} style={{ background: 'none', border: '1px solid #c8737a', color: '#c8737a', borderRadius: 6, padding: '6px 12px', cursor: 'pointer', fontSize: 13 }}>⚡ Connect Stripe webhook</button>
+              <button onClick={() => fetchOrders()} style={{ background: 'none', border: '1px solid #ddd', borderRadius: 6, padding: '6px 12px', cursor: 'pointer', fontSize: 13 }}>↻ Refresh</button>
+            </div>
           </div>
           {ordersErr && <p style={{ color: '#e55', fontSize: 13 }}>Error: {ordersErr}</p>}
           {!ordersErr && orders.length === 0 && <p style={{ color: '#999', fontSize: 13, margin: 0 }}>No orders saved yet — new orders will appear here automatically.</p>}
