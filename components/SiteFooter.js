@@ -1,6 +1,6 @@
 import styles from "@/app/page.module.css";
 import { PRODUCTS } from "@/lib/products";
-import { INSTAGRAM_URL, EMAIL } from "@/lib/site";
+import { INSTAGRAM_URL, EMAIL, GOOGLE_REVIEW_URL } from "@/lib/site";
 
 // Same footer as the main shop page
 export default function SiteFooter() {
@@ -34,6 +34,7 @@ export default function SiteFooter() {
           <a href="/marshmallow-bouquets-leduc">Leduc delivery</a>
           <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Instagram</a>
           <a href={`mailto:${EMAIL}`}>Contact</a>
+          {GOOGLE_REVIEW_URL && <a href={GOOGLE_REVIEW_URL} target="_blank" rel="noopener noreferrer">⭐ Review us on Google</a>}
         </div>
       </div>
       <div className={styles.footerBottom}>

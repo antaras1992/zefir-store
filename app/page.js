@@ -5,6 +5,7 @@ import styles from "./page.module.css";
 
 import { PRODUCTS, productDetails } from "@/lib/products";
 import { REVIEWS } from "@/lib/reviews";
+import { GOOGLE_REVIEW_URL } from "@/lib/site";
 
 // ============ FLOWER SVG ============
 function Flower({ type, size = 100 }) {
@@ -353,6 +354,11 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                 </div>
               ))}
             </div>
+            {GOOGLE_REVIEW_URL && (
+              <div style={{ textAlign: "center", marginTop: "24px" }}>
+                <a href={GOOGLE_REVIEW_URL} target="_blank" rel="noopener noreferrer" className={`${styles.btn} ${styles.btnOutline}`}>⭐ Leave us a Google review</a>
+              </div>
+            )}
           </section>
 
           <section className={styles.secDark} style={{ textAlign: "center" }}>
@@ -767,6 +773,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
             <a href="/marshmallow-bouquets-edmonton">Edmonton delivery</a>
             <a href="/marshmallow-bouquets-leduc">Leduc delivery</a>
             <a onClick={() => setInfoModal("contact")} style={{cursor:"pointer"}}>Contact</a>
+            <a href={GOOGLE_REVIEW_URL} target="_blank" rel="noopener noreferrer">⭐ Review us on Google</a>
           </div>
         </div>
         <div className={styles.footerBottom}>
