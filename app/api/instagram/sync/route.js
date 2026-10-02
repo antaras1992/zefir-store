@@ -1,4 +1,5 @@
 import { syncInstagram, isAdmin, getSetting } from "@/lib/instagram";
+import { createServiceClient } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -11,6 +12,13 @@ export async function GET(request) {
   const ua = request.headers.get("user-agent") || "";
   const cronOk = process.env.CRON_SECRET ? auth === `Bearer ${process.env.CRON_SECRET}` : ua.startsWith("vercel-cron");
   if (!cronOk && !isAdmin(password)) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Keep-alive: a daily DB query stops the free Supabase project from auto-pausing after 7 idle days
+  try {
+    await createServiceClient().from("gallery_photos").select("id").limit(1);
+  } catch (e) {
+    console.error("Supabase keep-alive failed:", e);
+  }
 
   try {
     const result = await syncInstagram();
