@@ -1,5 +1,25 @@
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
+import { getSetting, setSetting } from '@/lib/instagram';
+
+export const dynamic = 'force-dynamic';
+
+// Permanent design numbers: each photo gets the next number once and keeps it forever
+async function withNumbers(photos) {
+  try {
+    const map = (await getSetting('gallery_numbers')) || { next: 1, ids: {} };
+    let changed = false;
+    const oldestFirst = [...photos].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    for (const p of oldestFirst) {
+      if (!map.ids[p.id]) { map.ids[p.id] = map.next++; changed = true; }
+    }
+    if (changed) await setSetting('gallery_numbers', map);
+    return photos.map((p) => ({ ...p, number: map.ids[p.id] }));
+  } catch (e) {
+    console.error('gallery numbers:', e);
+    return photos;
+  }
+}
 
 const ADMIN_PASSWORD = process.env.GALLERY_ADMIN_PASSWORD;
 
@@ -11,7 +31,7 @@ export async function GET() {
     .select('*')
     .order('created_at', { ascending: false });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ photos: data });
+  return NextResponse.json({ photos: await withNumbers(data || []) });
 }
 
 // POST - upload photo (admin only)

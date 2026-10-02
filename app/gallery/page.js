@@ -26,7 +26,10 @@ export default function GalleryPage() {
       {/* Header */}
       <div style={{ background: '#fff', borderBottom: '1px solid #f0e0e0', padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
         <a href="/" style={{ color: '#c8737a', textDecoration: 'none', fontSize: 14 }}>← Back</a>
-        <h1 style={{ margin: 0, fontSize: 24, color: '#2d1b1e', fontWeight: 700 }}>Our Work Gallery</h1>
+        <div>
+          <h1 style={{ margin: 0, fontSize: 24, color: '#2d1b1e', fontWeight: 700 }}>Our Work Gallery</h1>
+          <p style={{ margin: '4px 0 0', fontSize: 13, color: '#8a6d70' }}>Love a design? Message us its number on Instagram and we&apos;ll make it for you 🌸</p>
+        </div>
       </div>
 
       {/* Category tabs */}
@@ -61,14 +64,15 @@ export default function GalleryPage() {
             onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
           >
             <div style={{ position: 'relative', width: '100%', height: 260 }}>
-              <Image src={photo.url} alt={photo.title || photo.category} fill style={{ objectFit: 'cover' }} sizes="320px" />
+              <Image src={photo.url} alt={photo.number ? `Marshmallow design #${photo.number} — ${photo.category}` : (photo.title || photo.category)} fill style={{ objectFit: 'cover' }} sizes="320px" />
+              {photo.number && (
+                <span style={{ position: 'absolute', top: 10, left: 10, background: 'rgba(255,255,255,0.95)', color: '#2d1b1e', fontWeight: 700, fontSize: 15, padding: '5px 12px', borderRadius: 20, boxShadow: '0 1px 6px rgba(0,0,0,0.15)' }}>#{photo.number}</span>
+              )}
             </div>
-            {(photo.title || photo.category) && (
-              <div style={{ padding: '10px 14px' }}>
-                {photo.title && <p style={{ margin: 0, fontWeight: 600, color: '#2d1b1e', fontSize: 14 }}>{photo.title}</p>}
-                <p style={{ margin: 0, color: '#c8737a', fontSize: 12, marginTop: 2 }}>{photo.category}</p>
-              </div>
-            )}
+            <div style={{ padding: '10px 14px' }}>
+              <p style={{ margin: 0, fontWeight: 600, color: '#2d1b1e', fontSize: 14 }}>{photo.number ? `Design #${photo.number}` : (photo.title || '')}</p>
+              <p style={{ margin: 0, color: '#c8737a', fontSize: 12, marginTop: 2 }}>{photo.category}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -81,9 +85,13 @@ export default function GalleryPage() {
         >
           <div style={{ position: 'relative', maxWidth: '90vw', maxHeight: '90vh', borderRadius: 12, overflow: 'hidden' }}>
             <img src={lightbox.url} alt={lightbox.title} style={{ maxWidth: '90vw', maxHeight: '85vh', objectFit: 'contain', display: 'block' }} />
-            {lightbox.title && (
-              <div style={{ background: 'rgba(0,0,0,0.6)', color: '#fff', padding: '10px 16px', fontSize: 14 }}>{lightbox.title}</div>
-            )}
+            <div onClick={e => e.stopPropagation()} style={{ background: 'rgba(0,0,0,0.7)', color: '#fff', padding: '12px 16px', fontSize: 15, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+              <span><b>{lightbox.number ? `Design #${lightbox.number}` : (lightbox.title || '')}</b> · {lightbox.category}</span>
+              <a href="https://ig.me/m/handmade_zefir_canada" target="_blank" rel="noopener noreferrer"
+                style={{ background: '#c8737a', color: '#fff', padding: '8px 16px', borderRadius: 6, textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
+                Order {lightbox.number ? `design #${lightbox.number}` : 'this design'} →
+              </a>
+            </div>
           </div>
           <button onClick={() => setLightbox(null)} style={{ position: 'fixed', top: 20, right: 20, background: 'none', border: 'none', color: '#fff', fontSize: 32, cursor: 'pointer' }}>✕</button>
         </div>

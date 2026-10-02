@@ -193,7 +193,7 @@ export default function AdminPage() {
                 <img src={photo.url} alt={photo.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div style={{ padding: '10px 12px' }}>
-                <p style={{ margin: 0, fontWeight: 600, fontSize: 13, color: '#2d1b1e' }}>{photo.title || '—'}</p>
+                <p style={{ margin: 0, fontWeight: 600, fontSize: 13, color: '#2d1b1e' }}>{photo.number ? `#${photo.number} · ` : ''}{photo.title || '—'}</p>
                 <p style={{ margin: '2px 0 8px', fontSize: 12, color: '#c8737a' }}>{photo.category}</p>
                 <button onClick={() => handleDelete(photo)}
                   style={{ width: '100%', padding: '7px', borderRadius: 6, border: '1px solid #ffbbbb', background: '#fff5f5', color: '#e55', fontSize: 13, cursor: 'pointer' }}>
