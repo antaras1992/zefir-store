@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { getSetting, setSetting } from "@/lib/instagram";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -31,6 +32,11 @@ export async function POST(request) {
       return Response.json({ ok: false, reason: "not paid" });
     }
 
+    // Already notified (e.g. customer reloaded the success page) → don't send Telegram twice
+    const orderKey = `orders/${session.id}`;
+    const existing = await getSetting(orderKey).catch(() => null);
+    if (existing) return Response.json({ ok: true, duplicate: true });
+
     // Items
     const items = (session.line_items?.data || [])
       .map((li) => {
@@ -52,6 +58,7 @@ export async function POST(request) {
     const shipMethod = session.metadata?.shipping_method || "—";
     const shipPrice = session.metadata?.shipping_price || "0";
     const deliveryDate = session.metadata?.delivery_date || "Not specified";
+    const heardFrom = session.metadata?.heard_from || "Not specified";
 
     // Buyer (payer)
     const cust = session.customer_details || {};
@@ -105,7 +112,31 @@ export async function POST(request) {
     msg += `📞 <b>Phone:</b> ${esc(phone)}\n`;
     msg += `📧 <b>Email:</b> ${esc(email)}\n`;
     if (billingAddress) msg += `💳 <b>Billing:</b> ${esc(billingAddress)}\n`;
+    msg += `🔎 <b>Found us via:</b> ${esc(heardFrom)}\n`;
     msg += `\n💰 <b>Total:</b> $${total} CAD`;
+
+    // Save the order (shown in /admin → Orders)
+    await setSetting(orderKey, {
+      id: session.id,
+      created: new Date((session.created || Date.now() / 1000) * 1000).toISOString(),
+      status: "new",
+      total,
+      items: (session.line_items?.data || []).map((li) => ({
+        name: li.price?.product?.name || li.description || "Item",
+        details: li.price?.product?.description || "",
+        qty: li.quantity || 1,
+        amount: ((li.amount_total || 0) / 100).toFixed(2),
+      })),
+      cardMessage,
+      deliveryDate,
+      shipMethod,
+      shipTo: shippingAddress || "",
+      recipient: recipientName,
+      buyer: buyerName,
+      phone,
+      email,
+      heardFrom,
+    }).catch((e) => console.error("Save order failed:", e));
 
     const token = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;

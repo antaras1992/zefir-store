@@ -17,6 +17,24 @@ export default function AdminPage() {
   const fileRef = useRef();
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
+  const [orders, setOrders] = useState([]);
+  const [statuses, setStatuses] = useState([]);
+  const [ordersErr, setOrdersErr] = useState('');
+  const fetchOrders = async (pw = password) => {
+    try {
+      const r = await fetch(`/api/orders?password=${encodeURIComponent(pw)}`);
+      const d = await r.json();
+      if (d.error) { setOrdersErr(d.error); return; }
+      setOrders(d.orders || []); setStatuses(d.statuses || []); setOrdersErr('');
+    } catch (e) { setOrdersErr(e.message); }
+  };
+  const updateStatus = async (id, status) => {
+    setOrders(o => o.map(x => x.id === id ? { ...x, status } : x));
+    const r = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password, id, status }) });
+    const d = await r.json();
+    showToast(d.ok ? 'Status saved' : (d.error || 'Error'));
+  };
+  const statusColor = (s) => ({ new: '#e55', 'in progress': '#d98b00', ready: '#2a7', shipped: '#2a6fdb', delivered: '#888', cancelled: '#aaa' }[s] || '#555');
   const [igStatus, setIgStatus] = useState('');
   const [igSyncing, setIgSyncing] = useState(false);
 
@@ -56,6 +74,7 @@ export default function AdminPage() {
     } catch { setAuthError('Network error, try again'); return; }
     setAuthenticated(true);
     fetchPhotos();
+    fetchOrders(password);
   };
 
   const handleFileChange = (e) => {
@@ -127,7 +146,7 @@ export default function AdminPage() {
       )}
 
       <div style={{ background: '#fff', borderBottom: '1px solid #f0e0e0', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ margin: 0, fontSize: 22, color: '#2d1b1e' }}>🌸 Gallery Admin</h1>
+        <h1 style={{ margin: 0, fontSize: 22, color: '#2d1b1e' }}>🌸 Zefir Admin</h1>
         <div style={{ display: 'flex', gap: 12 }}>
           <a href="/gallery" style={{ color: '#c8737a', textDecoration: 'none', fontSize: 14 }}>View Gallery →</a>
           <button onClick={() => setAuthenticated(false)} style={{ background: 'none', border: '1px solid #ddd', borderRadius: 6, padding: '6px 12px', cursor: 'pointer', fontSize: 13 }}>Logout</button>
@@ -135,6 +154,36 @@ export default function AdminPage() {
       </div>
 
       <div style={{ padding: 24, maxWidth: 1100, margin: '0 auto' }}>
+        {/* Orders */}
+        <div style={{ background: '#fff', borderRadius: 16, padding: 28, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: 24 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <h2 style={{ margin: 0, color: '#2d1b1e', fontSize: 18 }}>📦 Orders ({orders.length})</h2>
+            <button onClick={() => fetchOrders()} style={{ background: 'none', border: '1px solid #ddd', borderRadius: 6, padding: '6px 12px', cursor: 'pointer', fontSize: 13 }}>↻ Refresh</button>
+          </div>
+          {ordersErr && <p style={{ color: '#e55', fontSize: 13 }}>Error: {ordersErr}</p>}
+          {!ordersErr && orders.length === 0 && <p style={{ color: '#999', fontSize: 13, margin: 0 }}>No orders saved yet — new orders will appear here automatically.</p>}
+          <div style={{ display: 'grid', gap: 12 }}>
+            {orders.map(o => (
+              <div key={o.id} style={{ border: '1px solid #f0e0e0', borderLeft: `4px solid ${statusColor(o.status)}`, borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#2d1b1e' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 8, alignItems: 'center' }}>
+                  <b style={{ fontSize: 14 }}>📅 Needed by {o.deliveryDate} · ${o.total}</b>
+                  <select value={o.status} onChange={e => updateStatus(o.id, e.target.value)}
+                    style={{ padding: '6px 10px', borderRadius: 6, border: `1.5px solid ${statusColor(o.status)}`, color: statusColor(o.status), fontWeight: 600 }}>
+                    {statuses.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div style={{ marginTop: 6, lineHeight: 1.6 }}>
+                  {o.items.map((it, i) => <div key={i}>• {it.name}{it.details ? ` — ${it.details}` : ''} ×{it.qty} — ${it.amount}</div>)}
+                  {o.cardMessage && <div>💌 &quot;{o.cardMessage}&quot;</div>}
+                  <div>🚚 {o.shipMethod}{o.shipTo ? ` → ${o.recipient}, ${o.shipTo}` : ''}</div>
+                  <div>👤 {o.buyer} · {o.phone} · {o.email}</div>
+                  <div style={{ color: '#999' }}>Ordered {new Date(o.created).toLocaleString('en-CA')} · found us via {o.heardFrom}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Instagram sync */}
         <div style={{ background: '#fff', borderRadius: 16, padding: 28, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: 24 }}>
           <h2 style={{ margin: '0 0 8px', color: '#2d1b1e', fontSize: 18 }}>📸 Instagram → Gallery</h2>

@@ -172,6 +172,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
   const [infoModal, setInfoModal] = useState(null);
   const [faqOpen, setFaqOpen] = useState(null);
   const [calView, setCalView] = useState({y: new Date().getFullYear(), m: new Date().getMonth()});
+  const [heardFrom, setHeardFrom] = useState("");
   const handleCheckout = async () => {
     if (cart.length === 0) return;
     if (!selShip) {
@@ -183,7 +184,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart, shipping: selShip, deliveryDate }),
+        body: JSON.stringify({ items: cart, shipping: selShip, deliveryDate, heardFrom }),
       });
       const data = await res.json();
       if (data.url) {
@@ -704,6 +705,20 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                   </div>
                 );
               })()}
+            </div>
+            <div style={{ margin: "10px 0 4px" }}>
+              <label style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "#1C1A18", marginBottom: "6px" }}>How did you hear about us? <span style={{ fontWeight: 400, color: "#888780" }}>(optional)</span></label>
+              <select value={heardFrom} onChange={(e) => setHeardFrom(e.target.value)}
+                style={{ width: "100%", border: "1px solid #E8E5DF", borderRadius: "6px", padding: "10px", fontSize: "13px", background: "#fff", fontFamily: "'Inter',sans-serif" }}>
+                <option value="">Select…</option>
+                <option>Google search</option>
+                <option>Google Maps</option>
+                <option>Instagram</option>
+                <option>Facebook</option>
+                <option>Friend or family</option>
+                <option>Saw your work at an event</option>
+                <option>Other</option>
+              </select>
             </div>
             <div className={styles.cartNote}>Taxes calculated at checkout · 3 days handcrafting time</div>
             <div className={styles.cartTotal}><span>Total</span><span>${grandTotal.toFixed(2)}</span></div>
