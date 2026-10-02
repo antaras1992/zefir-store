@@ -1,5 +1,8 @@
 import { notFound } from "next/navigation";
 import { PRODUCTS, LOCAL_ONLY_IDS, SITE_URL } from "@/lib/products";
+import styles from "@/app/page.module.css";
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
 
 const DEFAULT_DESC = "Handmade marshmallow flowers in a gift box. Made fresh to order in Edmonton, AB.";
 
@@ -66,20 +69,13 @@ export default async function ProductPage({ params }) {
     },
   };
 
-  const c = { pink: "#c8737a", dark: "#2d1b1e", muted: "#6b5a5c", line: "#f0e0e0" };
+  const c = { pink: "#D4537E", dark: "#1C1A18", muted: "#5F5E5A", line: "#E8E5DF" };
 
   return (
-    <main style={{ minHeight: "100vh", background: "#fff8f8", fontFamily: "'Inter',sans-serif", color: c.dark }}>
+    <div className={styles.wrap}>
+    <main style={{ minHeight: "60vh", color: c.dark }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-
-      <header style={{ background: "#fff", borderBottom: `1px solid ${c.line}`, padding: "18px 16px" }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-          <a href="/" style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 24, color: c.dark, textDecoration: "none", letterSpacing: 2 }}>
-            ZEFIR <span style={{ color: c.pink }}>CANADA</span>
-          </a>
-          <a href="/" style={{ color: c.pink, fontSize: 14, textDecoration: "none" }}>← Shop all</a>
-        </div>
-      </header>
+      <SiteHeader />
 
       <section style={{ maxWidth: 1000, margin: "0 auto", padding: "32px 16px", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 32 }}>
         <div style={{ background: p.color || "#fff", borderRadius: 14, overflow: "hidden", aspectRatio: "1/1" }}>
@@ -110,7 +106,7 @@ export default async function ProductPage({ params }) {
             Handmade fresh to order — please allow 3 days.
           </p>
 
-          <a href={`/?product=${p.id}`} style={{ display: "inline-block", background: "#8a3d57", color: "#fff", padding: "14px 32px", borderRadius: 8, textDecoration: "none", fontWeight: 600 }}>
+          <a href={`/?product=${p.id}`} style={{ display: "inline-block", background: "#D4537E", color: "#fff", padding: "14px 32px", borderRadius: 8, textDecoration: "none", fontWeight: 600 }}>
             Order now
           </a>
         </div>
@@ -130,5 +126,7 @@ export default async function ProductPage({ params }) {
         </div>
       </section>
     </main>
+    <SiteFooter />
+    </div>
   );
 }

@@ -62,9 +62,13 @@ const [flowerColors, setFlowerColors] = useState({});
     setTimeout(() => setToast(""), 2200);
   };
 
-  const goShop = (cat) => { setShopCat(cat); setPage("shop"); setMenuOpen(false); window.scrollTo(0, 0); };
-  const goHome = () => { setPage("home"); setMenuOpen(false); window.scrollTo(0, 0); };
-  const goAbout = () => { setPage("about"); setMenuOpen(false); window.scrollTo(0, 0); };
+  // Keep the address bar in sync so the phone's Back button and shared links work
+  const pushUrl = (url) => {
+    try { if (window.location.pathname + window.location.search !== url) window.history.pushState(null, "", url); } catch {}
+  };
+  const goShop = (cat, push = true) => { setShopCat(cat); setPage("shop"); setMenuOpen(false); window.scrollTo(0, 0); if (push === true) pushUrl(`/?shop=${cat}`); };
+  const goHome = (push = true) => { setPage("home"); setMenuOpen(false); window.scrollTo(0, 0); if (push !== false) pushUrl("/"); };
+  const goAbout = () => { window.location.href = "/about"; };
 
   
   useEffect(() => {
@@ -88,19 +92,29 @@ const [flowerColors, setFlowerColors] = useState({});
     }
   }, [cart]);
 
-  const openProduct = (p) => {
+  const openProduct = (p, push = true) => {
+    if (push === true) pushUrl(`/?product=${p.id}`);
     setProduct(p); setSelSize(0); setSelFlavor(0); setSelQty(p.min || 1); setSelMsg("");
 setPage("product"); window.scrollTo(0, 0);setFlowerMode(null); setSelFlowers([]); setFlowerColors({}); setSelColor(null);
     setAddCard(false); setPendingColor(null); setAddCard(false);
 };
 
-  // Open a product directly from a link like /?product=tulip-box-12 (used by SEO product pages)
+  // Read the address bar: /?product=id, /?shop=bouquets, /?cart=1, /?contact=1 — on load and on Back/Forward
   useEffect(() => {
-    try {
-      const id = new URLSearchParams(window.location.search).get("product");
-      const p = id && PRODUCTS.find((x) => x.id === id);
-      if (p) openProduct(p);
-    } catch {}
+    const syncFromUrl = () => {
+      try {
+        const q = new URLSearchParams(window.location.search);
+        const p = q.get("product") && PRODUCTS.find((x) => x.id === q.get("product"));
+        if (p) openProduct(p, false);
+        else if (q.get("shop")) goShop(q.get("shop"), false);
+        else goHome(false);
+        if (q.get("cart") === "1") setCartOpen(true);
+        if (q.get("contact") === "1") setInfoModal("contact");
+      } catch {}
+    };
+    syncFromUrl();
+    window.addEventListener("popstate", syncFromUrl);
+    return () => window.removeEventListener("popstate", syncFromUrl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const priceRange = (p) => {
@@ -224,7 +238,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
     <div className={styles.wrap}>
       {/* NAV */}
       <nav className={styles.nav}>
-        <a className={styles.logo} onClick={goHome}>ZEFIR <span>CANADA</span></a>
+        <a className={styles.logo} onClick={() => goHome()}>ZEFIR <span>CANADA</span></a>
         <div className={styles.navLinks}>
           <a className={styles.navLink} onClick={() => goShop("all")}>Shop</a>
           <a className={styles.navLink} onClick={() => goShop("bouquets")}>Bouquets</a>
@@ -764,7 +778,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
           </div>
         </div>
         <div className={styles.footerBottom}>
-          <span>© 2025 Zefir Canada · Edmonton &amp; Leduc, Alberta</span>
+          <span>© {new Date().getFullYear()} Zefir Canada · Edmonton &amp; Leduc, Alberta</span>
           <span>Visa · Mastercard · Apple Pay · Google Pay</span>
         </div>
       </footer>
