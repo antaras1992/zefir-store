@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import styles from "./page.module.css";
 
-import { PRODUCTS } from "@/lib/products";
+import { PRODUCTS, productDetails } from "@/lib/products";
+import { REVIEWS } from "@/lib/reviews";
 
 // ============ FLOWER SVG ============
 function Flower({ type, size = 100 }) {
@@ -344,26 +345,13 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
             <h2 className={`${styles.secTitle} ${styles.serif}`}>Loved across Canada</h2>
             <p className={styles.secSub}>★★★★★ What people say about their bouquets</p>
             <div className={styles.reviews}>
-              <div className={styles.review}>
-                <div className={styles.reviewStars}>★★★★★</div>
-                <p className={styles.reviewText}>&ldquo;These edible tulips are as stunning as they are delicious! Each delicate bloom is crafted from soft, pillowy marshmallow infused with real fruit purée — the flavor is fresh, not overly sweet, and absolutely delightful. A perfect balance of beauty and taste — almost too pretty to eat... almost!&rdquo;</p>
-                <div className={styles.reviewName}>— Danika</div>
-              </div>
-              <div className={styles.review}>
-                <div className={styles.reviewStars}>★★★★★</div>
-                <p className={styles.reviewText}>&ldquo;These are so gorgeous 😍💖 Great job! 👏&rdquo;</p>
-                <div className={styles.reviewName}>— Jaya</div>
-              </div>
-              <div className={styles.review}>
-                <div className={styles.reviewStars}>★★★★★</div>
-                <p className={styles.reviewText}>&ldquo;Highly recommended ❤️❤️❤️❤️&rdquo;</p>
-                <div className={styles.reviewName}>— Jessy</div>
-              </div>
-              <div className={styles.review}>
-                <div className={styles.reviewStars}>★★★★★</div>
-                <p className={styles.reviewText}>&ldquo;So good — I am very happy! 😊 Will order again.&rdquo;</p>
-                <div className={styles.reviewName}>— Yevhenii</div>
-              </div>
+              {REVIEWS.map((r) => (
+                <div key={r.name} className={styles.review}>
+                  <div className={styles.reviewStars}>★★★★★</div>
+                  <p className={styles.reviewText}>&ldquo;{r.text}&rdquo;</p>
+                  <div className={styles.reviewName}>— {r.name}</div>
+                </div>
+              ))}
             </div>
           </section>
 
@@ -403,7 +391,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
               <div className={styles.pdpBreadcrumb}><span onClick={() => goShop(product.cat)} style={{ cursor: "pointer" }}>{product.cat}</span> / {product.name}</div>
               <div className={`${styles.pdpName} ${styles.serif}`}>{product.name}</div>
               <div className={styles.pdpPrice}>${product.sizes[selSize].p} <span style={{ fontSize: "14px", color: "#888780", fontWeight: 400 }}>CAD</span></div>
-              <div className={styles.pdpDesc}>{product.desc}</div>
+              <div className={styles.pdpDesc}>{product.desc}{productDetails(product).occasion ? ` ${productDetails(product).occasion}` : ""}</div>
 
               {product.sizes.length > 1 ? (
                 <>
@@ -530,6 +518,10 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
               </div>
 
 <button className={styles.pdpAdd} onClick={addToCart} disabled={product.flowerTypes&&(flowerMode==="mix"?(selFlowers.length<2||Object.keys(flowerColors).length<selFlowers.length):(selFlowers.length===0||Object.keys(flowerColors).length<selFlowers.length))} style={product.flowerTypes&&(flowerMode==="mix"?(selFlowers.length<2||Object.keys(flowerColors).length<selFlowers.length):(selFlowers.length===0||Object.keys(flowerColors).length<selFlowers.length))?{opacity:0.4,cursor:'not-allowed'}:{}}>Add to Cart</button>
+              <details style={{ margin: "14px 0 4px", fontSize: "13px", color: "#5F5E5A", lineHeight: 1.7 }}>
+                <summary style={{ cursor: "pointer", fontWeight: 600, color: "#1C1A18" }}>Ingredients, storage &amp; delivery</summary>
+                <ul style={{ paddingLeft: "18px", margin: "8px 0 0" }}>{productDetails(product).goodToKnow.map((t) => <li key={t}>{t}</li>)}</ul>
+              </details>
               <div className={styles.pdpTrust}>✓ Handmade fresh to order · 3 days before delivery<br />{["tulip-bouquet","mixed-bouquet","flower-basket"].includes(product.id) ? "✓ Local delivery (Edmonton & Leduc) or pickup only" : "✓ Local delivery, pickup & Canada-wide shipping"}<br />✓ Gift-ready packaging included<br />🎨 Want custom colours or size? <a href="/custom-orders" style={{ color: "#D4537E", textDecoration: "underline" }}>Custom orders via Instagram</a></div>
             </div>
           </div>

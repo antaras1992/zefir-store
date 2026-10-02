@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { PRODUCTS, LOCAL_ONLY_IDS, SITE_URL } from "@/lib/products";
+import { PRODUCTS, LOCAL_ONLY_IDS, SITE_URL, productDetails } from "@/lib/products";
+import { REVIEWS } from "@/lib/reviews";
 import styles from "@/app/page.module.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
@@ -50,6 +51,9 @@ export default async function ProductPage({ params }) {
   const { min, max } = priceInfo(p);
   const localOnly = LOCAL_ONLY_IDS.includes(p.id);
   const others = PRODUCTS.filter((x) => x.id !== p.id).slice(0, 4);
+  const d = productDetails(p);
+  const h2 = { fontSize: 13, textTransform: "uppercase", letterSpacing: 1, margin: "0 0 8px", color: "#1C1A18" };
+  const ul = { margin: "0 0 20px", paddingLeft: 18, fontSize: 14, color: "#5F5E5A", lineHeight: 1.8 };
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -89,26 +93,33 @@ export default async function ProductPage({ params }) {
           </p>
           <p style={{ fontSize: 15, lineHeight: 1.7, color: c.muted, margin: "0 0 20px" }}>{p.desc || DEFAULT_DESC}</p>
 
-          <h2 style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: 1, margin: "0 0 8px" }}>Options</h2>
-          <ul style={{ margin: "0 0 16px", paddingLeft: 18, fontSize: 14, color: c.muted, lineHeight: 1.8 }}>
-            {p.sizes.map((s) => (
-              <li key={s.n}>{s.n}{s.d ? ` (${s.d})` : ""} — ${s.p}</li>
-            ))}
-            <li>Flavors: {p.flavors.join(", ")}</li>
-            {p.min && <li>Minimum order: {p.min}</li>}
-          </ul>
+          {d.occasion && <p style={{ fontSize: 15, lineHeight: 1.7, color: c.muted, margin: "0 0 20px" }}>{d.occasion}</p>}
 
-          <h2 style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: 1, margin: "0 0 8px" }}>Delivery</h2>
-          <p style={{ fontSize: 14, color: c.muted, lineHeight: 1.7, margin: "0 0 24px" }}>
-            {localOnly
-              ? "Local delivery in Edmonton & Leduc area or free pickup in Leduc."
-              : "Local delivery in Edmonton & Leduc, free pickup in Leduc, or shipping across Canada with Canada Post."}{" "}
-            Handmade fresh to order — please allow 3 days.
-          </p>
+          <h2 style={h2}>Sizes & prices</h2>
+          <ul style={ul}>{d.inside.map((t) => <li key={t}>{t}</li>)}</ul>
+
+          <h2 style={h2}>You choose</h2>
+          <ul style={ul}>{d.choose.map((t) => <li key={t}>{t}</li>)}</ul>
+
+          <h2 style={h2}>Good to know</h2>
+          <ul style={ul}>{d.goodToKnow.map((t) => <li key={t}>{t}</li>)}</ul>
 
           <a href={`/?product=${p.id}`} style={{ display: "inline-block", background: "#D4537E", color: "#fff", padding: "14px 32px", borderRadius: 8, textDecoration: "none", fontWeight: 600 }}>
             Order now
           </a>
+        </div>
+      </section>
+
+      <section style={{ maxWidth: 1000, margin: "0 auto", padding: "8px 16px 24px" }}>
+        <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 26, fontWeight: 500, margin: "0 0 12px" }}>What our customers say</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 12 }}>
+          {REVIEWS.map((r) => (
+            <div key={r.name} style={{ background: "#fff", border: "1px solid #E8E5DF", borderRadius: 10, padding: "14px 16px" }}>
+              <div style={{ color: "#D4537E", fontSize: 13, marginBottom: 6 }}>★★★★★</div>
+              <p style={{ fontSize: 14, lineHeight: 1.6, color: "#5F5E5A", margin: "0 0 8px" }}>&ldquo;{r.text}&rdquo;</p>
+              <div style={{ fontSize: 13, fontWeight: 600 }}>— {r.name}</div>
+            </div>
+          ))}
         </div>
       </section>
 
