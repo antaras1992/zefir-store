@@ -27,6 +27,10 @@ const businessJsonLd = {
   image: `${SITE_URL}/hero.jpg`,
   priceRange: "$$",
   address: { "@type": "PostalAddress", addressLocality: "Leduc", addressRegion: "AB", addressCountry: "CA" },
+  sameAs: [
+    "https://www.instagram.com/handmade_zefir_canada",
+    "https://www.facebook.com/share/1FeZwWCENb/",
+  ],
   areaServed: [
     { "@type": "City", name: "Edmonton" },
     { "@type": "City", name: "Leduc" },
