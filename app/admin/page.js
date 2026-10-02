@@ -17,6 +17,26 @@ export default function AdminPage() {
   const fileRef = useRef();
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
+  const [igStatus, setIgStatus] = useState('');
+  const [igSyncing, setIgSyncing] = useState(false);
+
+  useEffect(() => {
+    const ig = new URLSearchParams(window.location.search).get('ig');
+    if (ig) setIgStatus(`Instagram: ${ig}`);
+  }, []);
+
+  const syncInstagram = async () => {
+    setIgSyncing(true);
+    try {
+      const r = await fetch(`/api/instagram/sync?password=${encodeURIComponent(password)}`);
+      const d = await r.json();
+      if (d.ok) {
+        setIgStatus(`Imported ${d.added} new photo(s)${d.remaining ? ` · ${d.remaining} more — press again` : ''}`);
+        fetchPhotos();
+      } else setIgStatus(`Error: ${d.error}`);
+    } catch (e) { setIgStatus(`Error: ${e.message}`); }
+    setIgSyncing(false);
+  };
 
   const fetchPhotos = async () => {
     setLoading(true);
@@ -111,6 +131,23 @@ export default function AdminPage() {
       </div>
 
       <div style={{ padding: 24, maxWidth: 1100, margin: '0 auto' }}>
+        {/* Instagram sync */}
+        <div style={{ background: '#fff', borderRadius: 16, padding: 28, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: 24 }}>
+          <h2 style={{ margin: '0 0 8px', color: '#2d1b1e', fontSize: 18 }}>📸 Instagram → Gallery</h2>
+          <p style={{ margin: '0 0 16px', fontSize: 13, color: '#777' }}>New Instagram photos are imported automatically every day. Videos are skipped. Delete any photo below — it won&apos;t come back.</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+            <a href={`/api/instagram/connect?password=${encodeURIComponent(password)}`}
+              style={{ padding: '10px 20px', borderRadius: 8, background: '#2d1b1e', color: '#fff', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+              Connect Instagram
+            </a>
+            <button onClick={syncInstagram} disabled={igSyncing}
+              style={{ padding: '10px 20px', borderRadius: 8, border: '1.5px solid #c8737a', background: '#fff', color: '#c8737a', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+              {igSyncing ? 'Syncing…' : '↻ Sync now'}
+            </button>
+          </div>
+          {igStatus && <p style={{ margin: '12px 0 0', fontSize: 13, color: igStatus.toLowerCase().includes('error') ? '#e55' : '#2a7' }}>{igStatus}</p>}
+        </div>
+
         {/* Upload form */}
         <div style={{ background: '#fff', borderRadius: 16, padding: 28, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: 32 }}>
           <h2 style={{ margin: '0 0 20px', color: '#2d1b1e', fontSize: 18 }}>Upload New Photo</h2>
