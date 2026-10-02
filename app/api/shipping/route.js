@@ -6,7 +6,7 @@ const WEIGHTS = {
   "tulip-bouquet": 0.7, "mixed-bouquet": 0.7, "single-tulip": 0.1, "flower-basket": 0.8,
 };
 
-const LOCAL_PREFIXES = ["T5", "T6", "T9E", "T9G", "T9S", "T4X"];
+const LOCAL_PREFIXES = ["T5", "T6", "T9E", "T9G", "T4X"];
 
 // Bouquets & baskets — local delivery / pickup only (not shipped Canada-wide)
 const LOCAL_ONLY_IDS = ["tulip-bouquet", "mixed-bouquet", "flower-basket"];

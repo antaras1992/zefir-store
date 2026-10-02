@@ -87,7 +87,7 @@ export async function POST(request) {
     msg += `🚚 <b>Shipping:</b> ${esc(shipMethod)} — $${esc(shipPrice)}\n\n`;
 
     // Warn if a local-only order (bouquet/basket or local delivery) is going outside the local area
-    const LOCAL_PREFIXES = ["T5", "T6", "T9E", "T9G", "T9S", "T4X"];
+    const LOCAL_PREFIXES = ["T5", "T6", "T9E", "T9G", "T4X"];
     const LOCAL_NAMES = ["Tulip Bouquet", "Mixed Flower Bouquet", "Flower Basket"];
     const shipPostal = (shipping?.address?.postal_code || "").replace(/\s+/g, "").toUpperCase();
     const hasLocalOnly = (session.line_items?.data || []).some((li) =>
