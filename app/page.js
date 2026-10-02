@@ -749,7 +749,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
         <div className={styles.footerTop}>
           <div>
             <div className={styles.footerBrand}>ZEFIR <span>CANADA</span></div>
-            <p className={styles.footerDesc}>Premium handmade marshmallow bouquets &amp; gifts. Made fresh in Edmonton, AB. Local delivery and Canada-wide shipping.</p>
+            <p className={styles.footerDesc}>Premium handmade marshmallow bouquets &amp; gifts. Made fresh in Leduc, AB. Local delivery in Edmonton &amp; Leduc, pickup, and Canada-wide shipping for gift boxes.</p>
           </div>
           <div className={styles.footerCol}>
             <h5>Shop</h5>
