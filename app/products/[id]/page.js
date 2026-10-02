@@ -117,7 +117,7 @@ export default async function ProductPage({ params }) {
             <div key={r.name} style={{ background: "#fff", border: "1px solid #E8E5DF", borderRadius: 10, padding: "14px 16px" }}>
               <div style={{ color: "#D4537E", fontSize: 13, marginBottom: 6 }}>★★★★★</div>
               <p style={{ fontSize: 14, lineHeight: 1.6, color: "#5F5E5A", margin: "0 0 8px" }}>&ldquo;{r.text}&rdquo;</p>
-              <div style={{ fontSize: 13, fontWeight: 600 }}>— {r.name}</div>
+              <div style={{ fontSize: 13, fontWeight: 600 }}>— {r.name}{r.translated && <span style={{ fontWeight: 400, fontSize: 11, color: "#888780" }}> · translated from Ukrainian</span>}</div>
             </div>
           ))}
         </div>

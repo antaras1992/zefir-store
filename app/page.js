@@ -349,7 +349,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                 <div key={r.name} className={styles.review}>
                   <div className={styles.reviewStars}>★★★★★</div>
                   <p className={styles.reviewText}>&ldquo;{r.text}&rdquo;</p>
-                  <div className={styles.reviewName}>— {r.name}</div>
+                  <div className={styles.reviewName}>— {r.name}{r.translated && <span style={{ fontWeight: 400, fontSize: "11px", color: "#888780" }}> · translated from Ukrainian</span>}</div>
                 </div>
               ))}
             </div>
