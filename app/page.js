@@ -206,7 +206,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
   const ProductCard = ({ p }) => (
     <div className={styles.productCard} onClick={() => openProduct(p)}>
       <div className={styles.productImg} style={{ background: p.color }}>
-        {p.image ? <img src={p.image} alt={p.name} /> : <Flower type={p.flower} size={120} />}
+        {p.image ? <img src={p.image} alt={`${p.name} — handmade marshmallow flowers`} loading="lazy" decoding="async" width={800} height={800} /> : <Flower type={p.flower} size={120} />}
       </div>
       {p.badge && <span className={styles.productBadge}>{p.badge}</span>}
       <div className={styles.productBody}>
@@ -271,7 +271,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
             </div>
             <div className={styles.heroVisual}>
               <div className={styles.heroBadge}>Handmade to order</div>
-              <img src="/hero.jpg" alt="Zefir Canada marshmallow bouquet gift boxes" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px" }} />
+              <img src="/hero.jpg" alt="Zefir Canada marshmallow bouquet gift boxes" fetchPriority="high" width={960} height={1280} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px" }} />
               <div className={styles.heroTag}>Looks real. Tastes magical.</div>
             </div>
           </section>
