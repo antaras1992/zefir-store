@@ -9,8 +9,8 @@ export const metadata = {
 
 const FAQ = [
   { q: "What is zefir?", a: "Zefir is a traditional Eastern European marshmallow — light, airy and fruity. We hand-pipe it into realistic flowers and arrange them into edible bouquets and gift boxes." },
-  { q: "What are your marshmallow flowers made of?", a: "Fruit & berry purée, sugar, agar-agar (a plant-based gelling agent from seaweed), egg white protein (albumin) and food colouring." },
-  { q: "What allergens do they contain?", a: "Our marshmallow flowers contain egg. They are made without gluten, dairy and nuts. If you have a severe allergy, please message us before ordering." },
+  { q: "What are your marshmallow flowers made of?", a: "Fruit & berry purée, sugar, agar-agar (a plant-based gelling agent from seaweed), albumin (dried egg white) and food colouring." },
+  { q: "What allergens do they contain?", a: "Our marshmallow flowers contain albumin (dried egg white), so they are not suitable for people with an egg allergy. They are made without gluten, dairy and nuts. If you have a severe allergy, please message us before ordering." },
   { q: "Are they gluten-free, dairy-free and fat-free?", a: "Our zefir recipe has no flour, no milk or butter and no added fat." },
   { q: "How long do marshmallow bouquets last?", a: "Up to 3 weeks at room temperature. Keep them away from direct sunlight, heat and humidity." },
   { q: "Can I customize my bouquet?", a: `Yes! For special colours, sizes or designs, message us on Instagram ${INSTAGRAM_HANDLE}. Please allow at least 1 week for custom orders.` },

@@ -25,7 +25,7 @@ export default function LeducPage() {
         { q: "Is delivery in Leduc really free?", a: "Yes, delivery anywhere in Leduc (including Nisku) is always free, no minimum order." },
         { q: "Can I pick up my order?", a: "Yes, pickup in Leduc is free. Choose \"Pickup in Leduc\" in the cart." },
         { q: "How far ahead should I order?", a: "At least 3 days for standard orders and about 1 week for custom designs." },
-        { q: "What are marshmallow flowers made of?", a: "Fruit & berry purée, sugar, agar-agar, egg white protein and food colouring. Made without gluten, dairy or nuts." },
+        { q: "What are marshmallow flowers made of?", a: "Fruit & berry purée, sugar, agar-agar, albumin (dried egg white) and food colouring. Made without gluten, dairy or nuts." },
       ]}
     />
   );

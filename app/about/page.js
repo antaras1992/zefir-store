@@ -3,7 +3,7 @@ import { INSTAGRAM_URL, SITE_URL } from "@/lib/site";
 
 export const metadata = {
   title: "About Us — Handmade Marshmallow Flowers in Edmonton & Leduc | Zefir Canada",
-  description: "Zefir Canada is a small family business in Leduc, Alberta making hand-piped marshmallow (zefir) flower bouquets and gift boxes from fruit purée, agar-agar and egg white.",
+  description: "Zefir Canada is a small family business in Leduc, Alberta making hand-piped marshmallow (zefir) flower bouquets and gift boxes from fruit purée, agar-agar and albumin.",
   alternates: { canonical: `${SITE_URL}/about` },
 };
 
@@ -16,7 +16,7 @@ export default function AboutPage() {
       <H2>Why people love our zefir flowers</H2>
       <List items={[
         "Handmade fresh to order — never from a shelf",
-        "Made from fruit & berry purée, sugar, agar-agar and egg white",
+        "Made from fruit & berry purée, sugar, agar-agar and albumin (dried egg white)",
         "Made without gluten, dairy, nuts or added fat",
         "Gift-ready packaging included",
         "Local delivery in Edmonton & Leduc, free pickup in Leduc, shipping across Canada for gift boxes",
