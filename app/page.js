@@ -546,7 +546,12 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
           ) : (
             cart.map((it, idx) => (
               <div key={idx} className={styles.cartLine}>
-                <div className={styles.cartLineImg}><Flower type={it.flower} size={44} /></div>
+                <div className={styles.cartLineImg}>{(() => {
+                  const img = it.image || PRODUCTS.find((x) => x.id === it.id)?.image;
+                  if (img) return <img src={img} alt={it.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", borderRadius: "inherit" }} />;
+                  if (it.id === "greeting-card") return <span style={{ fontSize: "26px" }}>💌</span>;
+                  return <Flower type={it.flower} size={44} />;
+                })()}</div>
                 <div className={styles.cartLineInfo}>
                   <div className={styles.cartLineName}>{it.name}</div>
                   <div className={styles.cartLineOpts}>{it.size} · {it.flavor}</div>
