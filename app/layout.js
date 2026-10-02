@@ -3,7 +3,7 @@ const SITE_URL = "https://www.zefircanada.ca";
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Zefir Canada — Handmade Marshmallow Bouquets | Edmonton & Leduc",
-  description: "Premium handmade marshmallow bouquets and gift boxes. Made fresh in Edmonton, AB. Local delivery, pickup and Canada-wide shipping.",
+  description: "Handmade marshmallow (zefir) flower bouquets and gift boxes, made fresh to order in Leduc, AB. Free delivery in Leduc, delivery across Edmonton, free pickup. Gift boxes ship across Canada. Order online.",
   keywords: ["marshmallow bouquet", "marshmallow flowers", "zefir", "edible bouquet", "birthday gift Edmonton", "gift box Leduc", "marshmallow bouquet Canada"],
   alternates: { canonical: "/" },
   icons: { icon: "/favicon.svg" },
