@@ -10,19 +10,19 @@
 
 /* NAV */
 .nav { background: var(--offwhite); border-bottom: 1px solid var(--border); padding: 0 40px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; }
-.logo { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; letter-spacing: 2px; color: var(--text); }
+.logo { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; letter-spacing: 2px; color: var(--text); white-space: nowrap; text-decoration: none; }
 .logo span { color: var(--rose); }
 .navLinks { display: flex; gap: 28px; align-items: center; }
-.navLink { font-size: 13px; color: var(--gray2); letter-spacing: 0.3px; transition: color .2s; }
+.navLink { font-size: 13px; color: var(--gray2); letter-spacing: 0.3px; transition: color .2s; text-decoration: none; }
 .navLink:hover { color: var(--rose); }
 .navRight { display: flex; align-items: center; gap: 12px; }
 .socialBtn { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: var(--rose-light,#fce8ef); color: var(--rose-dark,#c44a72); transition: background .2s, transform .2s, color .2s; text-decoration: none; }
 .socialBtn:hover { background: var(--rose,#D4537E); color: #fff; transform: translateY(-2px); }
-.navCart { position: relative; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; }
+.navCart { position: relative; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; text-decoration: none; }
 .cartBadge { background: var(--rose); color: #fff; font-size: 11px; font-weight: 600; min-width: 18px; height: 18px; border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 0 5px; }
 .navToggle { display: none; font-size: 24px; color: var(--text); background: none; border: none; cursor: pointer; line-height: 1; }
 .mobileMenu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--offwhite); border-bottom: 1px solid var(--border); z-index: 150; flex-direction: column; padding: 8px 0; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-.mobileMenu a { padding: 14px 24px; font-size: 15px; color: var(--text); border-bottom: 1px solid var(--border); }
+.mobileMenu a { padding: 14px 24px; font-size: 15px; color: var(--text); border-bottom: 1px solid var(--border); text-decoration: none; }
 
 /* HERO */
 .hero { background: var(--cream); padding: clamp(40px,6vw,72px) clamp(20px,5vw,40px); display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px,5vw,56px); align-items: center; min-height: clamp(360px,50vw,480px); }
@@ -163,7 +163,7 @@
 .footerBrand span { color: var(--rose); }
 .footerDesc { font-size: 13px; color: var(--gray); line-height: 1.6; }
 .footerCol h5 { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; }
-.footerCol a { display: block; font-size: 13px; color: var(--gray); margin-bottom: 9px; transition: color .2s; }
+.footerCol a { display: block; font-size: 13px; color: var(--gray); margin-bottom: 9px; transition: color .2s; text-decoration: none; }
 .footerCol a:hover { color: var(--rose); }
 .footerBottom { border-top: 1px solid var(--border); padding-top: 20px; max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--gray); }
 
@@ -207,7 +207,10 @@
   .footerTop { grid-template-columns: 1fr 1fr; gap: 28px; }
 }
 @media (max-width: 768px) {
-  .nav { padding: 0 20px; }
+  .nav { padding: 0 16px; }
+  .logo { font-size: 18px; letter-spacing: 1.5px; }
+  .navRight { gap: 8px; }
+  .socialBtn { width: 30px; height: 30px; }
   .navLinks { display: none; }
   .navToggle { display: block; }
   .mobileMenu { display: flex; }

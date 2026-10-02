@@ -276,7 +276,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
             <div>
               <div className={styles.heroEyebrow}>Handmade in Edmonton, AB</div>
               <h1 className={styles.serif}>Marshmallow Bouquets That Surprise &amp; Delight</h1>
-              <p>Beautiful edible flower bouquets for birthdays, weddings and special moments. Handcrafted fresh, delivered across Edmonton, Leduc &amp; all of Canada.</p>
+              <p>Beautiful edible flower bouquets for birthdays, weddings and special moments. Handcrafted fresh, delivered across Edmonton &amp; Leduc — gift boxes ship across Canada.</p>
               <div className={styles.heroBtns}>
                 <a className={`${styles.btn} ${styles.btnPrimary}`} onClick={() => goShop("all")}>Shop Collection</a>
                 <a className={`${styles.btn} ${styles.btnOutline}`} onClick={() => goShop("bouquets")}>View Bouquets</a>
