@@ -7,7 +7,9 @@ export const maxDuration = 60;
 export async function GET(request) {
   const auth = request.headers.get("authorization");
   const password = new URL(request.url).searchParams.get("password");
-  const cronOk = process.env.CRON_SECRET && auth === `Bearer ${process.env.CRON_SECRET}`;
+  // Vercel Cron: verified by CRON_SECRET if set, otherwise by its user agent (sync is harmless: it only imports own photos)
+  const ua = request.headers.get("user-agent") || "";
+  const cronOk = process.env.CRON_SECRET ? auth === `Bearer ${process.env.CRON_SECRET}` : ua.startsWith("vercel-cron");
   if (!cronOk && !isAdmin(password)) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
