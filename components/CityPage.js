@@ -6,7 +6,8 @@ function fromPrice(p) {
   return Math.min(...p.sizes.map((s) => s.p));
 }
 
-export default function CityPage({ city, intro, delivery, areas, faq }) {
+export default function CityPage({ city, intro, delivery, areas, faq, title, eyebrow, deliveryTitle, productIds }) {
+  const list = productIds ? PRODUCTS.filter((p) => productIds.includes(p.id)) : PRODUCTS;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -14,16 +15,16 @@ export default function CityPage({ city, intro, delivery, areas, faq }) {
   };
 
   return (
-    <InfoPage eyebrow={`${city}, Alberta`} title={`Marshmallow Flower Bouquets in ${city}`} jsonLd={jsonLd}>
+    <InfoPage eyebrow={eyebrow || `${city}, Alberta`} title={title || `Marshmallow Flower Bouquets in ${city}`} jsonLd={jsonLd}>
       {intro.map((t, i) => <P key={i}>{t}</P>)}
 
-      <H2>Delivery & pickup in {city}</H2>
+      <H2>{deliveryTitle || `Delivery & pickup in ${city}`}</H2>
       <List items={delivery} />
       {areas && <P>We deliver to: {areas}.</P>}
 
       <H2>Popular gifts</H2>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(150px,1fr))", gap: 14, margin: "8px 0 20px" }}>
-        {PRODUCTS.map((p) => (
+        {list.map((p) => (
           <a key={p.id} href={`/products/${p.id}`} style={{ textDecoration: "none", color: c.dark }}>
             <div style={{ background: p.color, borderRadius: 10, overflow: "hidden", aspectRatio: "1/1" }}>
               {p.image && <img src={p.image} alt={`${p.name} — marshmallow flowers, ${city}`} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />}
