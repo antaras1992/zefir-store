@@ -2,7 +2,7 @@
 // Falls back to weight+zone estimate if Canada Post is unavailable.
 
 const WEIGHTS = {
-  "tulip-box-4": 0.3, "tulip-box-10": 0.6, "tulip-box-12": 0.7, "tulip-box-20": 1.0,
+  "tulip-box-4": 0.3, "tulip-box-10": 0.6, "tulip-box-12": 0.75, "tulip-box-20": 1.0,
   "tulip-bouquet": 0.7, "mixed-bouquet": 0.7, "single-tulip": 0.1, "flower-basket": 0.8,
 };
 
@@ -21,6 +21,24 @@ const ZONE_RATES = { 1: { base: 12, perKg: 3 }, 2: { base: 16, perKg: 5 }, 3: { 
 const CP_BASE = "https://api.canadapost-postescanada.ca/prod/devportal-portaildesdeveloppeurs";
 const CP_TOKEN_URL = `${CP_BASE}/cpc-api-native-oauth-provider/oauth2/token`;
 const CP_RATES_URL = `${CP_BASE}/rating/v1/prices`;
+
+// Real packed parcel sizes (outer shipping box, cm). Tulip Box 12: gift box 26×19×9 with frame,
+// packed in an 11×8×4" shipping box → 29×21×11 cm, ~0.75 kg.
+const PARCELS = {
+  "tulip-box-12": { l: 29, w: 21, h: 11 },
+};
+
+// Several boxes are stacked in one parcel: max length/width, heights add up
+function parcelDimensions(items) {
+  let l = 0, w = 0, h = 0, known = false;
+  for (const i of items) {
+    const d = PARCELS[i.id];
+    if (!d) continue;
+    known = true;
+    l = Math.max(l, d.l); w = Math.max(w, d.w); h += d.h * (i.qty || 1);
+  }
+  return known ? { length: l, width: w, height: Math.round(h * 10) / 10 } : null;
+}
 
 function getItemWeight(item) {
   return (WEIGHTS[item.id] || 0.5) * item.qty;
@@ -50,13 +68,13 @@ async function getCanadaPostToken() {
   return data.access_token || null;
 }
 
-async function getCanadaPostRates(token, weightKg, origin, dest) {
+async function getCanadaPostRates(token, weightKg, origin, dest, dims) {
   const customer = process.env.CANADA_POST_CUSTOMER;
 
   const body = {
     customerNumber: customer,
     quoteType: "commercial",
-    parcelCharacteristics: { weight: weightKg },
+    parcelCharacteristics: dims ? { weight: weightKg, dimensions: dims } : { weight: weightKg },
     originPostalCode: origin,
     destination: { domestic: { postalCode: dest } },
   };
@@ -149,7 +167,12 @@ export async function POST(request) {
     let cpOptions = null;
     try {
       const token = await getCanadaPostToken();
-      if (token) cpOptions = await getCanadaPostRates(token, weightKg, origin, dest);
+      if (token) {
+        const dims = parcelDimensions(items);
+        cpOptions = await getCanadaPostRates(token, weightKg, origin, dest, dims);
+        // If Canada Post rejects the dimensions, fall back to weight-only quote
+        if ((!cpOptions || cpOptions.length === 0) && dims) cpOptions = await getCanadaPostRates(token, weightKg, origin, dest, null);
+      }
     } catch (e) {
       console.error("Canada Post flow failed:", e);
     }
