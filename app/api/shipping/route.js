@@ -40,6 +40,19 @@ function parcelDimensions(items) {
   return known ? { length: l, width: w, height: Math.round(h * 10) / 10 } : null;
 }
 
+// Packaging added to the Canada Post price (not to the product price):
+// shipping box + filler + tape per parcel, and the 3D-printed support frame per gift box
+// (140 g of filament at $16/kg ≈ $2.24).
+const PACKING = {
+  perParcel: 1.5,
+  perItem: { "tulip-box-12": 2.25 },
+};
+
+function packingCost(items) {
+  const perItem = items.reduce((s, i) => s + (PACKING.perItem[i.id] || 0) * (i.qty || 1), 0);
+  return Math.round((PACKING.perParcel + perItem) * 100) / 100;
+}
+
 function getItemWeight(item) {
   return (WEIGHTS[item.id] || 0.5) * item.qty;
 }
@@ -178,14 +191,15 @@ export async function POST(request) {
     }
 
     if (cpOptions && cpOptions.length > 0) {
-      cpOptions.forEach((o) => options.push(o));
+      const pack = packingCost(items);
+      cpOptions.forEach((o) => options.push({ ...o, price: Math.round((o.price + pack) * 100) / 100 }));
       return Response.json({ options, weight: weightKg, source: "canada-post" });
     }
 
     // Fallback estimate
     const zone = ZONE_BY_LETTER[firstLetter] || 3;
     const rate = ZONE_RATES[zone];
-    const shipCost = Math.round((rate.base + rate.perKg * weightKg) * 100) / 100;
+    const shipCost = Math.round((rate.base + rate.perKg * weightKg + packingCost(items)) * 100) / 100;
     const etaByZone = { 1: "2–4 business days", 2: "3–6 business days", 3: "5–9 business days" };
     options.push({ id: "canada-post-est", name: "Canada Post Shipping", price: shipCost, eta: etaByZone[zone] });
 

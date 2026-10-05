@@ -716,7 +716,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
                       <div style={{marginTop:"10px",padding:"10px 12px",background:"#fff8e7",borderRadius:"8px",border:"1px solid #f0d080",fontSize:"12px",color:"#7a6000",lineHeight:"1.5"}}>
                         🎂 <b>Ordering for a birthday or special date?</b><br />
                         We ship early so your gift arrives <b>on or before</b> the date you choose. It may arrive 1–3 days early — our marshmallow bouquets stay fresh up to 3 weeks, so it&apos;s perfect to keep until the big day.<br />
-                        Canada Post delivery times are estimates and delays are outside our control. Please order with extra time.
+                        Canada Post delivery times are estimates and delays are outside our control. Please order with extra time. Shipping price includes protective packaging.
                       </div>
                     )}
                   </div>
