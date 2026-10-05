@@ -17,7 +17,7 @@ export default function CanadaPage() {
       productIds={["tulip-box-4", "tulip-box-10", "tulip-box-12", "tulip-box-20", "single-tulip"]}
       intro={[
         "Send handmade marshmallow (zefir) flowers to anyone in Canada. Our tulip gift boxes are made fresh to order in Alberta, packed in protective boxes and shipped with Canada Post to every province.",
-        "Each tulip is hand-piped from fruit & berry purée, sugar, agar-agar and albumin (dried egg white) — light, airy and naturally coloured. A gift that looks like real flowers, arrives safely by mail and stays fresh up to 3 weeks.",
+        "Each tulip is hand-piped from fruit & berry purée, sugar, agar-agar and albumin (dried egg white) — light, airy and made in any colour you like. A gift that looks like real flowers, arrives safely by mail and stays fresh up to 3 weeks.",
         "Perfect for long-distance birthdays, anniversaries, Mother's Day, thank-you gifts and corporate gifting for teams in different cities.",
       ]}
       delivery={[
