@@ -8,6 +8,7 @@ export const metadata = {
     title: "Zefir Canada — Gallery of marshmallow bouquets",
     description: "Handmade marshmallow flower bouquets and gift boxes. Choose a design by number.",
     url: `${SITE_URL}/gallery`,
+    images: [{ url: "/hero.jpg" }],
   },
 };
 
