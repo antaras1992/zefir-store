@@ -44,7 +44,7 @@ function parcelDimensions(items) {
 // shipping box + filler + tape per parcel, and the 3D-printed support frame per gift box
 // (140 g of filament at $16/kg ≈ $2.24).
 const PACKING = {
-  perParcel: 1.5,
+  perParcel: 2.0, // ULINE S-13290 11x8x4" box $1.45 + filler + tape + ULINE shipping
   perItem: { "tulip-box-12": 2.25 },
 };
 
