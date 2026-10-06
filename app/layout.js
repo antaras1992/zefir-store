@@ -33,7 +33,7 @@ const businessJsonLd = {
   address: { "@type": "PostalAddress", addressLocality: "Leduc", addressRegion: "AB", addressCountry: "CA" },
   sameAs: [
     "https://www.instagram.com/handmade_zefir_canada",
-    "https://www.facebook.com/share/1FeZwWCENb/",
+    "https://www.facebook.com/ZefirCanada",
   ],
   areaServed: [
     { "@type": "City", name: "Edmonton" },
