@@ -1,9 +1,9 @@
-import Stripe from "stripe";
+import { stripe } from "@/lib/stripe";
 import { isAdmin, getSetting, setSetting } from "@/lib/instagram";
 
 export const dynamic = "force-dynamic";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 const WEBHOOK_URL = "https://www.zefircanada.ca/api/stripe-webhook";
 
 // One-time setup from /admin: creates the Stripe webhook and stores its signing secret
