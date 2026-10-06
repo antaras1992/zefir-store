@@ -67,8 +67,9 @@ export default function ChristmasPage() {
       <List items={[
         "Local delivery in Edmonton & area — $25, free on orders $100+",
         "Delivery in Leduc and pickup in Leduc — free",
-        "Please order at least 3 days ahead; December fills up fast",
-        "Canada-wide shipping: allow 3 business days + Canada Post time, plus holiday delays",
+        "Recommended: order by December 10 for shipping across Canada",
+        "Recommended: order by December 19 for local delivery before Christmas",
+        "December fills up fast — every order is handmade, so earlier is better",
       ]} />
 
       <H2>Christmas FAQ</H2>

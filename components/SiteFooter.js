@@ -34,6 +34,7 @@ export default function SiteFooter() {
           <a href="/marshmallow-bouquets-leduc">Leduc delivery</a>
           <a href="/edible-bouquets-edmonton">Edible bouquets Edmonton</a>
           <a href="/marshmallow-bouquets-canada">Shipping across Canada</a>
+          <a href="/christmas-marshmallow-gifts">Christmas gifts 🎄</a>
           <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Instagram</a>
           <a href={`mailto:${EMAIL}`}>Contact</a>
           {GOOGLE_REVIEW_URL && <a href={GOOGLE_REVIEW_URL} target="_blank" rel="noopener noreferrer">⭐ Review us on Google</a>}
