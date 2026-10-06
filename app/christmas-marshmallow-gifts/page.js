@@ -1,6 +1,8 @@
 import InfoPage, { H2, P, List, Button, c } from "@/components/InfoPage";
 import { PRODUCTS, LOCAL_ONLY_IDS } from "@/lib/products";
 import { SITE_URL, INSTAGRAM_URL } from "@/lib/site";
+import Snow from "@/components/Snow";
+import PineBranch from "@/components/PineBranch";
 
 export const metadata = {
   title: "Christmas Marshmallow Gifts Edmonton — Edible Flower Bouquets & Gift Boxes | Zefir Canada",
@@ -32,7 +34,15 @@ export default function ChristmasPage() {
   const gifts = GIFTS.map((g) => ({ ...g, p: PRODUCTS.find((x) => x.id === g.id) })).filter((g) => g.p);
 
   return (
-    <InfoPage eyebrow="Christmas 2026 🎄" title="Christmas Gifts Made of Marshmallow Flowers" jsonLd={jsonLd}>
+    <InfoPage eyebrow="Christmas 2026 🎄" title="Christmas Gifts Made of Marshmallow Flowers" jsonLd={jsonLd} decor={
+      <>
+        <Snow always />
+        <div aria-hidden="true" style={{ display: "flex", justifyContent: "space-between", margin: "-28px -10px 8px", pointerEvents: "none" }}>
+          <PineBranch style={{ width: "clamp(110px,28vw,210px)", height: "auto" }} />
+          <PineBranch flip style={{ width: "clamp(110px,28vw,210px)", height: "auto" }} />
+        </div>
+      </>
+    }>
       <P>Looking for a Christmas gift that is handmade, beautiful and actually gets eaten? Our marshmallow (zefir) flowers are hand-piped petal by petal from fruit &amp; berry purée — they look like real flowers and taste like a light, airy dessert.</P>
       <P>Order bouquets and gift boxes in festive red, white, green and gold — delivered in Edmonton &amp; Leduc, or shipped across Canada to family far away.</P>
 

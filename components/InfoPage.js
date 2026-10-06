@@ -35,12 +35,13 @@ export function ReviewButton() {
   return <Button href={GOOGLE_REVIEW_URL} external>⭐ Leave us a Google review</Button>;
 }
 
-export default function InfoPage({ eyebrow, title, children, jsonLd }) {
+export default function InfoPage({ eyebrow, title, children, jsonLd, decor }) {
   return (
     <div className={styles.wrap} style={{ minHeight: "100vh" }}>
       {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />}
       <SiteHeader />
-      <main style={{ maxWidth: 760, margin: "0 auto", padding: "48px 20px 64px" }}>
+      <main style={{ maxWidth: 760, margin: "0 auto", padding: "48px 20px 64px", position: "relative" }}>
+        {decor}
         {eyebrow && <div style={{ fontSize: 11, letterSpacing: 2, textTransform: "uppercase", color: c.rose, marginBottom: 8 }}>{eyebrow}</div>}
         <h1 style={{ fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: "clamp(32px,6vw,44px)", fontWeight: 500, margin: "0 0 20px", lineHeight: 1.15 }}>{title}</h1>
         {children}

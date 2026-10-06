@@ -1,3 +1,5 @@
+import Snow from "@/components/Snow";
+
 const SITE_URL = "https://www.zefircanada.ca";
 
 export const metadata = {
@@ -56,6 +58,7 @@ export default function RootLayout({ children }) {
       <body style={{ margin: 0 }}>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }} />
         {children}
+        <Snow />
       </body>
     </html>
   );
