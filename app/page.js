@@ -276,9 +276,15 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
         <>
           <section className={styles.hero}>
             <div>
-              <div className={styles.heroEyebrow}>Handmade in Edmonton, AB</div>
+              <div className={styles.heroEyebrow}>Handmade in Leduc · Edmonton area</div>
               <h1 className={styles.serif}>Marshmallow Bouquets That Surprise &amp; Delight</h1>
               <p>Beautiful edible flower bouquets for birthdays, weddings and special moments. Handcrafted fresh, delivered across Edmonton &amp; Leduc — gift boxes ship across Canada.</p>
+              <ul className={styles.heroBadges}>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/></svg>Handmade</li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>Made fresh to order</li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18C6 10 11 5 19 5c0 8-5 13-13 13z"/><path d="M6 18l7-7"/></svg>Fruit purée · no preservatives</li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z"/><circle cx="7" cy="17" r="1.6"/><circle cx="17" cy="17" r="1.6"/></svg>Edmonton &amp; Leduc delivery</li>
+              </ul>
               <div className={styles.heroBtns}>
                 <a className={`${styles.btn} ${styles.btnPrimary}`} onClick={() => goShop("all")}>Shop Collection</a>
                 <a className={`${styles.btn} ${styles.btnOutline}`} onClick={() => goShop("bouquets")}>View Bouquets</a>
@@ -293,7 +299,7 @@ price: p.sizes[selSize].p, qty: selQty, msg: selMsg, flower: p.flower,
           </section>
 
           <div className={styles.trustBar}>
-            <div className={styles.trustItem}><span className={styles.trustDot}></span>Handmade in Edmonton</div>
+            <div className={styles.trustItem}><span className={styles.trustDot}></span>Handmade in Leduc, AB</div>
             <div className={styles.trustItem}><span className={styles.trustDot}></span>Fresh to order</div>
             <div className={styles.trustItem}><span className={styles.trustDot}></span>Local delivery &amp; pickup</div>
             <div className={styles.trustItem}><span className={styles.trustDot}></span>Ships across Canada</div>
