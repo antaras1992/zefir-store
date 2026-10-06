@@ -1,11 +1,11 @@
-import Stripe from "stripe";
+import { stripe } from "@/lib/stripe";
 import { processPaidSession } from "@/lib/orders";
 import { getSetting } from "@/lib/instagram";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 
 // Stripe calls this after every completed checkout — so no order is missed
 // even if the customer closes the tab before the /success page loads.
