@@ -34,6 +34,18 @@ export default function AdminPage() {
     const d = await r.json();
     showToast(d.ok ? 'Status saved' : (d.error || 'Error'));
   };
+  const [ship, setShip] = useState({}); // { [orderId]: { tracking, carrier, busy } }
+  const markShipped = async (o) => {
+    const f = ship[o.id] || {};
+    if (!f.tracking) { showToast('Enter a tracking number'); return; }
+    if (!confirm(`Send "shipped" email with tracking ${f.tracking} to ${o.email}?`)) return;
+    setShip(s => ({ ...s, [o.id]: { ...f, busy: true } }));
+    const r = await fetch('/api/orders/ship', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password, id: o.id, tracking: f.tracking, carrier: f.carrier || 'Canada Post' }) });
+    const d = await r.json().catch(() => ({}));
+    setShip(s => ({ ...s, [o.id]: { ...f, busy: false } }));
+    if (d.ok) { showToast('Email sent to customer ✓'); fetchOrders(); }
+    else { showToast(`Error: ${d.error || 'failed'}`); fetchOrders(); }
+  };
   const setupWebhook = async () => {
     const r = await fetch('/api/admin/setup-webhook', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) });
     const d = await r.json();
@@ -187,6 +199,24 @@ export default function AdminPage() {
                   <div>👤 {o.buyer} · {o.phone} · {o.email}</div>
                   <div style={{ color: '#999' }}>Ordered {new Date(o.created).toLocaleString('en-CA')} · found us via {o.heardFrom}</div>
                 </div>
+                {o.emailedAt ? (
+                  <div style={{ marginTop: 8, padding: '8px 10px', background: '#eef8f0', borderRadius: 6, color: '#2e7d4f' }}>
+                    ✉️ Shipped email sent {new Date(o.emailedAt).toLocaleString('en-CA')} · {o.carrier} <a href={o.trackingUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#2e7d4f' }}>{o.tracking}</a>
+                  </div>
+                ) : !/pickup|local/i.test(o.shipMethod || '') && o.status !== 'cancelled' && (
+                  <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+                    <select value={(ship[o.id] || {}).carrier || 'Canada Post'} onChange={e => setShip(s => ({ ...s, [o.id]: { ...(s[o.id] || {}), carrier: e.target.value } }))}
+                      style={{ padding: '8px', borderRadius: 6, border: '1px solid #ddd', fontSize: 13 }}>
+                      {['Canada Post', 'Purolator', 'UPS', 'FedEx'].map(c => <option key={c}>{c}</option>)}
+                    </select>
+                    <input placeholder="Tracking number" defaultValue={o.tracking || ''} onChange={e => setShip(s => ({ ...s, [o.id]: { ...(s[o.id] || {}), tracking: e.target.value } }))}
+                      style={{ flex: '1 1 160px', padding: '8px 10px', borderRadius: 6, border: '1px solid #ddd', fontSize: 13 }} />
+                    <button onClick={() => markShipped(o)} disabled={(ship[o.id] || {}).busy}
+                      style={{ padding: '8px 14px', borderRadius: 6, border: 'none', background: '#c8737a', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+                      {(ship[o.id] || {}).busy ? 'Sending…' : '📦 Shipped → email customer'}
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
